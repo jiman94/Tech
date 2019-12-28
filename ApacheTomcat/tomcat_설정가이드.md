@@ -1,0 +1,343 @@
+```java
+#!/bin/bash
+# This is tomcat env.sh for iosp by Open Source Consulting, Inc
+export DATE=`date +%Y%m%d_%H%M%S`
+#####################################
+## Set Tomcat base env #####
+#####################################
+export JAVA_HOME=/usr/java/jdk1.8.0_152
+export SERVER_NAME=tomcat8_11
+export CATALINA_HOME=/opt/was/apache-tomcat-8.5.23
+
+export CATALINA_BASE=/opt/was/servers/${SERVER_NAME}
+export PORT_OFFSET=100
+export COMP_USER=wasuser
+
+#####################################
+##### Set Log env #####
+#####################################
+export LOG_BASE=${CATALINA_BASE}/logs
+export LOG_DIR=${LOG_BASE}/log
+export GC_LOG_DIR=${LOG_BASE}/gclog
+export HEAP_DUMP_DIR=${LOG_BASE}/heaplog
+
+#########################################
+## Set Port Configuration ######
+#########################################
+# Default Ports are as below #
+# HTTP_PORT : 8080 #
+# SSL_PORT : 8443 #
+# SHUTDOWN_PORT : 8005 #
+#########################################
+
+export HTTP_PORT=$(expr 8080 + $PORT_OFFSET)
+export AJP_PORT=$(expr 8009 + $PORT_OFFSET)
+export SSL_PORT=$(expr 8443 + $PORT_OFFSET)
+export SHUTDOWN_PORT=$(expr 8005 + $PORT_OFFSET)
+
+if [ "x$JAVA_OPTS" = "x" ]; then
+
+# JVM Options : Memory
+JAVA_OPTS="$JAVA_OPTS -Xms2g -Xmx2g"
+JAVA_OPTS="$JAVA_OPTS -XX:MetaspaceSize=1g -XX:MaxMetaspaceSize=1g"
+JAVA_OPTS="$JAVA_OPTS -XX:+UseG1GC"
+JAVA_OPTS="$JAVA_OPTS -XX:+UnlockDiagnosticVMOptions"
+JAVA_OPTS="$JAVA_OPTS -XX:+G1SummarizeConcMark"
+JAVA_OPTS="$JAVA_OPTS -XX:InitiatingHeapOccupancyPercent=35"
+JAVA_OPTS="-server"
+JAVA_OPTS="$JAVA_OPTS -Dserver=$SERVER_NAME"
+JAVA_OPTS="$JAVA_OPTS -Dhttp.port=$HTTP_PORT"
+JAVA_OPTS="$JAVA_OPTS -Dajp.port=$AJP_PORT"
+JAVA_OPTS="$JAVA_OPTS -Dssl.port=$SSL_PORT"
+JAVA_OPTS="$JAVA_OPTS -Dshutdown.port=$SHUTDOWN_PORT"
+JAVA_OPTS="$JAVA_OPTS -Djava.library.path=$CATALINA_HOME/lib/"
+JAVA_OPTS="$JAVA_OPTS -verbose:gc"
+JAVA_OPTS="$JAVA_OPTS -Xloggc:${GC_LOG_DIR}/gc.log"
+JAVA_OPTS="$JAVA_OPTS -XX:+PrintGCDetails"
+JAVA_OPTS="$JAVA_OPTS -XX:+PrintGCTimeStamps"
+JAVA_OPTS="$JAVA_OPTS -XX:+HeapDumpOnOutOfMemoryError"
+JAVA_OPTS="$JAVA_OPTS -XX:HeapDumpPath=${HEAP_DUMP_DIR}/java_pid.hprof"
+
+CATALINA_OPTS="$CATALINA_OPTS -Dcom.sun.management.jmxremote"
+CATALINA_OPTS="$CATALINA_OPTS -Dcom.sun.management.jmxremote.port=8086"
+CATALINA_OPTS="$CATALINA_OPTS -Dcom.sun.management.jmxremote.ssl=false"
+CATALINA_OPTS="$CATALINA_OPTS -Dcom.sun.management.jmxremote.authenticate=false"
+CATALINA_OPTS="$CATALINA_OPTS -Djava.rmi.server.hostname=192.168.15.100"
+JAVA_OPTS="$JAVA_OPTS -Djava.net.preferIPv4Stack=true"
+JAVA_OPTS="$JAVA_OPTS -Dsun.rmi.dgc.client.gcInterval=3600000"
+JAVA_OPTS="$JAVA_OPTS -Dsun.rmi.dgc.server.gcInterval=3600000"
+JAVA_OPTS="$JAVA_OPTS -Dsun.lang.ClassLoader.allowArraySyntax=true "
+JAVA_OPTS="$JAVA_OPTS -Djava.awt.headless=true"
+JAVA_OPTS="$JAVA_OPTS -Djava.net.preferIPv4Stack=true"
+JAVA_OPTS="$JAVA_OPTS -Djava.security.egd=file:/dev/./urandom"
+# JAVA_OPTS="$JAVA_OPTS -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager"
+fi
+
+#####################################
+## Athena Dolly Clustering ###
+#####################################
+
+#export JAVA_OPTS="$JAVA_OPTS -Ddolly.properties=/opt/dolly-agentnew/dolly.properties"
+#export JAVA_OPTS="$JAVA_OPTS -javaagent:/opt/dolly-agent-new/lib/core-1.0.0-SNAPSHOT.jar"
+
+#####################################
+## Set Scouter Tomcat Agent ###
+#####################################
+
+#export JAVA_OPTS="$JAVA_OPTS -javaagent:/opt/apm/scouter/agent.java/scouter.agent.jar"
+#export JAVA_OPTS="$JAVA_OPTS -Dscouter.config=/opt/apm/scouter/agent.java/conf/${SERVER_NAME}.conf"
+export JAVA_OPTS
+
+echo "================================================"
+echo "JAVA_HOME=$JAVA_HOME"
+echo "CATALINA_HOME=$CATALINA_HOME"
+echo "SERVER_HOME=$CATALINA_BASE"
+echo "HTTP_PORT=$HTTP_PORT"
+echo "SSL_PORT=$SSL_PORT"
+echo "AJP_PORT=$AJP_PORT"
+echo "SHUTDOWN_PORT=$SHUTDOWN_PORT"
+echo "================================================"
+
+
+-XX:MetaspaceSize=<NNN>
+-XX:MaxMetaspaceSize=<NNN> 
+-XX:MinMetaspaceFreeRatio=<NNN>
+-XX:MaxMetaspaceFreeRatio=<NNN>
+
+```
+
+```sh
+#!/bin/bash
+. ./env.sh
+DATE=`date +%Y%m%d%H%M%S`
+# Process Check ---------------------------------------
+PID=`ps -ef | grep java | grep "=$SERVER_NAME" | awk '{print $2}'`
+echo $PID
+if [ e$PID != "e" ]
+then
+echo "Tomcat ($SERVER_NAME) is already RUNNING..."
+exit;
+fi
+# WAS User Check----------------------------------------
+UNAME=`id -u -n`
+if [ e$UNAME != "e$COMP_USER" ]
+then
+echo "$COMP_USER USER to start this SERVER! - $SERVER_NAME..."
+exit;
+fi
+# Make LOG Directory------------------------------------
+if [ ! -d "${LOG_DIR}" ];
+then
+ mkdir -p ${LOG_DIR}
+fi
+if [ ! -d "${GC_LOG_DIR}" ];
+then
+ mkdir -p ${GC_LOG_DIR}
+fi
+if [ ! -d "${HEAP_DUMP_DIR}" ];
+then
+ mkdir -p ${HEAP_DUMP_DIR}
+fi
+# Make Temp Directory------------------------------------
+if [ ! -d $CATALINA_BASE/temp ]
+then
+echo "temp directory is not exist. create temp directory."
+mkdir -p $CATALINA_BASE/temp
+fi
+
+# -------------------------------------------------------
+
+nohup $CATALINA_HOME/bin/catalina.sh run >> ${LOG_DIR}/$SERVER_NAME.out
+2>&1 &
+
+# ------------------------------------------------------
+if [ e$1 = "enotail" ]
+then
+echo "Starting... $SERVER_NAME"
+exit;
+fi
+
+# -----------------------------------------------------
+sleep 1
+Installation Guide
+Confidential Page 23 11/9/2018
+$CATALINA_BASE/bin/tail.sh
+```
+
+```sh 
+#!/bin/sh
+. ./env.sh
+$CATALINA_HOME/bin/shutdown.sh 
+```
+
+```sh 
+#!/bin/bash
+. ./env.sh
+ps -ef | grep java | grep "server=$SERVER_NAME" | awk {'print "kill -9 " $2'}
+| sh -x
+```
+
+```sh 
+#!/bin/sh
+. ./env.sh
+for count in 1 2 3 4 5; do
+ echo "Thread Dump : $count"
+ for i in `ps -ef | grep java | grep "SERVER=$SERVER_NAME " | awk '{print
+$2}'`;do
+echo "+kill -3 $i"
+kill -3 $i
+echo "sleep 1 sec"
+sleep 1
+ done
+ echo "done"
+ sleep 3
+done
+```
+
+```sh 
+#!/bin/sh
+. ./env.sh
+ps -ef | grep java | grep "SERVER=$SERVER_NAME "
+```
+
+```sh 
+#!/bin/sh
+. ./env.sh
+tail -f $DOMAIN_BASE/$SERVER_NAME/log/server.log
+```
+
+
+```sh 
+
+-Xss4m
+-Xms4g
+-Xmx4g
+-XX:MetaspaceSize=1g
+-XX:MaxMetaspaceSize=1g 
+-server
+-XX:+UseG1GC
+-XX:+UnlockDiagnosticVMOptions
+-XX:+G1SummarizeConcMark
+-XX:InitiatingHeapOccupancyPercent=35
+-Djava.awt.headless=true 
+-Djava.net.preferIPv4Stack=true
+-Dfile.encoding=UTF-8 
+-Duser.name=jmryu
+-Dtool=pilot
+-javaagent:lombok.jar
+
+-Duser.timezone=GMT+9
+```
+
+
+#### To configure compression, open Tomcat's server.xml
+```java
+ compression="on" compressableMimeType="text/html,text/xml,text/plain,text/css,text/javascript,application/
+ 
+```
+```java
+ javascript,application/json"Resource name="jdbc/xxxxxx"
+          auth="Container"
+          type="javax.sql.DataSource"
+          factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
+          initialSize="10"
+          maxActive="100"
+          minIdle="10"
+          maxIdle="50"
+          maxWait="10000" 
+          testOnBorrow="true"
+          testOnReturn="false"
+          testOnConnect="false"
+          testWhileIdle="false"
+          validationQuery="SELECT 1 from dual"
+          validationInterval="30000"
+          suspectTimeout="60"
+          timeBetweenEvictionRunsMillis="30000"
+          removeAbandonedTimeout="60"
+          removeAbandoned="true"
+          logAbandoned="true"
+          abandonWhenPercentageFull="50"
+          minEvictableIdleTimeMillis="60000"
+          jmxEnabled="true"
+          username="xxxxx"
+          password="xxxxx"
+          driverClassName="oracle.jdbc.OracleDriver"
+          url="jdbc:oracle:oci:xxxxx"/>
+```
+
+### spring의 applicationContext-jdbc.xml 
+```java
+  <bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+    <property name="resourceRef">
+      <value>true</value>
+    </property>
+    <property name="jndiName">
+      <value>java:comp/env/jdbc/PortalDB</value>
+    </property>
+  </bean>
+```
+
+
+java -Dserver.ssl.enabled=false -Xms4g -Xmx4g -XX:+UseG1GC -jar target/tcnativeapp-0.0.1-SNAPSHOT.jar
+
+DBCP2
+C3P0
+Tomcat JDBC
+히카리 CP
+
+
+
+
+export JAVA_OPTS='-XX:MaxMetaspaceSize=512m -XX:MetaspaceSize=256m'
+
+
+-XX:MetaspaceSize=100M 
+java -XX:+UnlockDiagnosticVMOptions -XX:+PrintFlagsFinal -version -XX:+UseG1GC | grep Metaspace 
+
+
+# jdk1.8 기준 설정
+eclipse > Tomcat9 > VM arguments :
+
+-Dtopas_server_name=topas
+-Xss1m  
+-Xms2g 
+-Xmx2g 
+-XX:MaxMetaspaceSize=1g 
+-XX:+UseConcMarkSweepGC 
+-XX:CMSInitiatingOccupancyFraction=75 
+-XX:+UseCMSInitiatingOccupancyOnly 
+-XX:+AlwaysPreTouch 
+-Djava.awt.headless=true 
+-XX:NumberOfGCLogFiles=32 
+-XX:GCLogFileSize=64 
+-Dtopas.log.dir=D:/logs
+
+
+# TLS 디버깅 
+
+-Djava.security.debug=all -Djavax.net.debug=all 
+
+> 예시 
+
+java -Djava.security.debug=all -Djavax.net.debug=all Hc 
+
+
+
+# jdk1.7 기준 설정 
+
+Windows
+VM arguments : 
+
+
+-Dtopas_server_name=topas
+-Xss1m  
+-Xmx2048m 
+-XX:PermSize=512m 
+-XX:MaxPermSize=1024m 
+-Dtopas.log.dir=D:/logs
+
+# 스카우터 적용 방법 
+-javaagent:D:/topasIBE/WAS/scouter/agent.java/scouter.agent.jar
+-Dscouter.config=D:/topasIBE/WAS/scouter/scouter.conf
+
+
