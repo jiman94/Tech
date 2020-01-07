@@ -1,3 +1,26 @@
+모든 도커 컨테이너 삭제(remove all docker containers)
+구동중인 모든 도커 컨테이너들을 중지시키고, 삭제한다.
+
+ docker stop $(docker ps -a -q)
+ docker rm $(docker ps -a -q)
+
+모든 도커 이미지 삭제(remove all docker images)
+
+docker rmi $(docker images -q)
+
+
+docker system prune -a 
+
+
+docker rm -f `docker ps -a -q`
+docker rmi -f `docker images`
+
+
+
+
+
+
+
 cd /home
 
 docker login -u="jiman94" -p="Docker!2020"
@@ -8,10 +31,22 @@ docker ps -a
 
 docker run -it -p 8080:8080 -p 50000:50000 -v /home/jenkins_home:/var/jenkins_home -v /var/run/docker.sock:/var/run/docker.sock --restart unless-stopped jiman94/docker1
 
+docker run -it -p 8080:8080 -v /home/jenkins_home:/var/jenkins_home -v /var/run/docker.sock:/var/run/docker.sock --restart unless-stopped jiman94/docker1
+
+http://192.168.99.100:8080/login?from=%2F
 
 
+https://github.com/wonwoo/spring-boot-docker
 
+docker exec -it e1599c528193  /bin/bash
 
+docker exec -it docker-mysql bash;
+
+docker exec -i docker-mysql mysql -uroot -proot book_manager < book_manager.sql
+
+mysql -uroot -p 
+
+docker e1599c528193 exec -it ae bash
 
 echo "-----BEGIN RSA PRIVATE KEY-----
 M+y/Hl3bm5Q/어쩌구저쩌구난리
@@ -51,9 +86,6 @@ git config credential.helper 'cache --timeout=300'
 
 
 
-docker rm -f `docker ps -a -q`
-docker rmi -f `docker images`
-
 git add .
 git pull
 git push
@@ -91,6 +123,7 @@ docker run -it -p 8080:8080 -p 50000:50000 -v /home/jenkins_home:/var/jenkins_ho
 http://192.168.99.100:8080/login?from=%2F
 
 docker exec -it 6228470dd314  /bin/bash
+
 
 /var/jenkins_home/secrets/initialAdminPassword
 
