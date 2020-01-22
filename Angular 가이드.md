@@ -2,6 +2,8 @@
 
 > SPA vs SSR & Nuxt.js
 
+npm install -g yarn. 
+
 npm install -g @angular/cli
 
 ng new client

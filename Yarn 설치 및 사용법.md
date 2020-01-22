@@ -56,7 +56,22 @@ yarn add --dev yarn-upgrade-all
 yarn upgrade --latest
 
 
+ng update --all --force
+npm install --save-dev @typescipt@3.4
+
+ng update @angular/core --from 7 --to 8 --migrate-only
+
+# angular-auth-with-jwt\src\polyfills.ts
+
+import 'core-js/es7/reflect';
+import 'core-js/es/reflect';
+
+
 npm install -g karma-typescript
+
+npm install typescript@3.5.3
+
+npm i @angular-devkit/core
 
 
 
@@ -68,8 +83,16 @@ npm i -g npm-check-updates
 ncu -u
 npm install
 
-npm install typescript@3.5.3
 
+ng update @angular/cli @angular/core
+ng update @angular/material
+ng update @angular/cli @angular/core
+
+npm install -g @angular/cli 
+npm uninstall -g angular-cli
+npm cache clean    
+ng update rxjs
+ng update @angular/core
 
 npm install --save-dev @angular-devkit/build-angular
 or,
