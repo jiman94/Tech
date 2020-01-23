@@ -1,3 +1,17 @@
+npm install -g npm-check-updates
+
+ncu -u를 CLI로 입력을 하면 package.json의 dependencies와 devDependencies에 있는 각 패키지들이 최신버전으로 변경이 됩니다.
+
+ncu - u
+
+or
+
+yarn 
+
+npm install
+
+
+
 # Yarn 설치 및 사용법
 - Facebook에서 만든 자바스크립트 패키지 매니저인 Yarn
 
