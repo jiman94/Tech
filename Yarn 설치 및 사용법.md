@@ -11,6 +11,9 @@ yarn
 npm install
 
 
+"typescript": "~3.6.3"
+
+
 
 # Yarn 설치 및 사용법
 - Facebook에서 만든 자바스크립트 패키지 매니저인 Yarn
