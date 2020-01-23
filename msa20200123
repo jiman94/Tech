@@ -1,0 +1,520 @@
+ # 마이크로서비스 시작하기 (1편)
+
+2개 이상의 마이크로한 서비스를 띄워서 각 서비스는 OAuth, JWT 등 token 인증을 이용해 통신해야 하고 트랜잭션 관리도 기존의 모노리스 아키텍쳐와는 완전히 다르기 때문에 MQ도 반드시 구축이 되어야 했으며 API Gateway부터 서비스 디스커버리를 구축하는게 간단한 일이 아니었기 때문입니다.
+
+로드밸런싱, Auto Scale, Auto Recovery 등을 해결해주는 쿠버네티스까지 포함된다면 러닝커브는 더욱더 커질 수밖에 없습니다.
+
+
+ 서비스는 언어나 환경
+
+ 모노리스는 하나의 프로젝트이기 때문에 모든 부서가 같은 환경과 같은 언어, 프레임워크를 이용하도록 강제되어야 했습니다. 
+ 그렇지만 메인서비스는 Spring으로 하되 머신러닝은 Python으로 개발하고 싶을 수 있고 IO와 같은 비동기가 많은 프로젝트의 경우 Node.js를 이용하고 싶을 수도 있습니다. 
+ 이러한 경우에 각각의 앱이 개별적으로 서비스되는 MSA가 해결책이 될 수 있습니다.
+
+
+# 마이크로서비스 시작하기 (2편) - 12요소 방법론
+
+ 
+12요소 방법론이란 허로쿠(Heroku) 클라우드 플랫폼을 만든 창시자들이 정립한 방법론으로써 어플리케이션을 만들때 필요한 여러가지 근본적인 핵심 사상을 정리한것입니다.
+그렇다면 12요소 어플리케이션의 실천법에 대하여 알아보도록 하겠습니다.
+
+1. 코드베이스 (Codebase)
+어플리케이션은 git과 같은 버전 관리 시스템을 통하여 형상관리 되어야하며 코드와 App은 1:1로 매핑되어 동일한 코드를 여러 App이 공유하지 않도록 해야합니다. 공유가 필요한 부분은 모듈화하여 공유하여야 합니다. 하나의 코드베이스는 복수의 환경으로 배포가 가능해야 합니다.
+
+2. 의존관계 (Deoendencies)
+의존관계는 패키지 매니저 툴(Java의 경우 Gradle이나 Maven)을 이용하여 명시적으로 표시하고 격리하여야 합니다.
+
+3. 설정 (Config)
+하나의 코드베이스는 여러 환경에 배포될수 있어야 한다고 하였으며 환경에 따라 DB나 스토리지 등 설정 정보들이 달라질수 있기 때문에 어플리케이션 구동 시에 설정 정보들이 주입될 수 있도록 해야합니다.
+
+4. 지원 서비스(Backing Services)
+DB나 SMTP 등의 지원 서비스들은 필요에 따라 어플리케이션을 통하여 추가되는 자원으로 취급할 수 있습니다.
+
+5. 빌드, 릴리스, 실행 (Build, Release, Run)
+어플리케이션은 빌드, 릴리스, 실행 단계를 엄격하게 분리하여 빌드와 배포, 실행을 지속적으로 가능하도록 해야합니다.
+
+6. 프로세스 (Processes)
+클라우드 환경에서 서비스는 여러 인스턴스로 구동되며 트래픽에 따라 Auto Scale를 통해 수평적으로 확장됩니다.
+그렇기 때문에 프로세스의 축소/확장 혹은 배포나 설정 변경으로 인한 프로세스의 변화에 따라 상태 정보가 손실되지 않도록 무상태 프로세스로 실행되어야합니다.
+
+ 
+
+어플리케이션 간 공유되어야 하는 정보들은 별도의 저장소나 캐시 혹은 ZooKeeper와 같은 분산 코디네이터를 이용해야합니다.
+
+7. 포트 바인딩 (Port Binding)
+Tomcat과 같은 WAS를 미리 설치하여 어플리케이션을 띄우는 방식이 아닌 독립적으로 실행 가능한 서비스로 구성되어야 하기 때문에 특정 포트를 이용하는것이 아닌 포트 바인딩을 통하여 서비스가 외부에 제공되어야 합니다.
+
+8. 동시성 (Concurrency)
+어플리케이션은 아무것도 공유하지 않으면서 수평으로 확장(Scale out)하는 것을 통하여 동시성을 높여야합니다. 이는 매우 간단하면서도 안정적인 작업입니다.
+
+9. 처분성 (Disposability)
+어플리케이션은 장애가 전파되지 않도록 빠르게 종료되어야 하며 빠른 시작을 통하여 서비스의 연속성과 견고함을 극대화해야합니다. 이를 위해 개발자는 시스템의 프로세스 매니저로부터 수신 받는 종료 신호를 통해 Graceful Shutdown을 구현해 주어야 합니다. (스프링의 경우 SIGTERM을 수신하였을 경우 이를 보장합니다)
+또한 하드웨어나 네트워크 장애로 인해 타임아웃이 발생되어 정상적인 서비스를 제공할수 없는 경우에는 프로세스를 격리시키거나 리커버리를 통하여 적절한 조치를 취해야 합니다.
+
+10. 개발/운영 짝맞춤 (Dev/prod parity)
+개발과 스테이징, 운영은 가능한 한 동일하게 유지하여야 합니다.
+
+11. 로그 (Logs)
+모노리스 서비스에서는 로그를 주로 로컬 디스크에 저장합니다. 하지만 서비스가 수평적으로 확장/축소 되는 클라우드 환경에서는 로그를 확인하기 위해 각 인스턴스에 접근하여 확인하는 것이 매우 번거로운 일이기때문에 스트림을 이용하여 처리해야 합니다.
+
+12. 관리 프로세스 (Admin Process)
+서비스의 운영 단계에서는 디비 마이그레이션 등의 일회성 작업들이 발생될수 있습니다. 이를 위해서 별도의 프로그램이나 시스템을 만드는것은 불필요하기 때문에 일회성 프로세스를 이용하여 실행해야합니다. 이런 점 때문에 REPL Shell이 제공되는 언어를 선호하는데 Java 역시 9버전부터 REPL Shell을 제공하고 있습니다.
+
+# 마이크로서비스 시작하기 (3편) - Spring Cloud Config로 설정 주입
+
+ 
+우리는 '12요소 방법론'을 배우면서 환경에 따라 DB나 스토리지 등 설정 정보들이 달라질수 있기 때문에 어플리케이션 구동 시에 설정 정보들이 주입될 수 있도록 해야한다고 배웠습니다.
+이를 위해서 Spring Cloud Config를 이용하여 프로젝트를 구현해보도록 하겠습니다.
+
+Spring cloud config는 분산 시스템에서 설정파일을 외부로 분리하는 것을 지원하기 때문에 외부 속성을 중앙에서 관리할 수 있으며 어플리케이션의 재배포 없이 적용이 가능합니다.
+
+준비
+Spring cloud config를 테스트해보기 위해서는 3개의 Git Repository가 필요합니다.
+
+Config Properties Files
+Spring Cloud Config Server
+Spring Cloud Config Client
+
+1. Config Properties Files
+해당 깃허브 저장소에서는 어플리케이션 구동 시 주입 될 설정 정보들을 선언합니다.
+속성(properties, yml) 파일은 ${App Name}-${Profile}.${ext} 형식으로 생성해야 합니다.
+
+kasha-dev.yml
+kasha:
+  hello: dev world!
+kasha-operation.yml
+kasha:
+  hello: operation world!
+2. Spring Cloud Config Server
+Config Server 앱은 클라이언트 앱들이 구동 될 때 위에서 yml로 선언한 설정 정보들을 주입 해주는 역활을 한다.
+
+2-1. 아래의 spring-cloud-config-server 의존성 파일을 넣어주자.
+dependencies {
+    implementation('org.springframework.cloud:spring-cloud-config-server')
+}
+2-2. src/main/resources/application.yml 파일에 아래와 같이 선언해주자.
+uri 경로는 설정 정보들이 저장되어 있는 첫번째 깃허브 저장소의 uri이다.
+
+server:
+  port: 4670
+spring:
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/SeoJinHyuk14/Msa-config
+2-3. Main이 선언되어 있는 클래스에 @EnableConfigServer 어노테이션을 추가해준다.
+@SpringBootApplication
+@EnableConfigServer
+public class MsaApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(MsaApplication.class, args);
+    }
+
+}
+2-4. 실행
+서버를 실행한 후 http://localhost:4670/kasha/${profile}에 요청을 날려보자.
+propertySources - source - kasha.hello의 값이 profile에 따라 다른 것을 알수 있다.
+
+curl http://localhost:4670/kasha/dev
+{
+  "name": "kasha",
+  "profiles": [
+    "dev"
+  ],
+  "label": null,
+  "version": "3e6827fd3dfc0e79e687094a7d67de787eeda25d",
+  "state": null,
+  "propertySources": [
+    {
+      "name": "https://github.com/SeoJinHyuk14/Msa-config/kasha-dev.yml",
+      "source": {
+        "kasha.hello": "dev world!"
+      }
+    }
+  ]
+}
+curl http://localhost:4670/kasha/operation
+{
+  "name": "kasha",
+  "profiles": [
+    "operation"
+  ],
+  "label": null,
+  "version": "3e6827fd3dfc0e79e687094a7d67de787eeda25d",
+  "state": null,
+  "propertySources": [
+    {
+      "name": "https://github.com/SeoJinHyuk14/Msa-config/kasha-operation.yml",
+      "source": {
+        "kasha.hello": "operation world!"
+      }
+    }
+  ]
+}
+클라이언트 앱을 구현하여 실행하게 되면 클라이언트 앱은 서버 앱으로부터 config정보를 받아갈 것이고 그 과정에서 서버 앱의 콘솔에 아래와 같은 로그가 찍힐 것입니다.
+아래 로그를 통해 서버 앱이 깃허브 저장소에서 kasha-dev.yml을 받아 클라이언트 앱에게 전달해준다는 것을 알수 있습니다.
+
+Adding property source: file:/var/folders/bc/36p4bfkn7zq744ckr1k7jp840000gn/T/config-repo-12187904048800898306/kasha-dev.yml
+3. Spring Cloud Config Client
+이제 서비스를 제공해 줄 클라이언트 어플리케이션을 만들 차례입니다.
+
+3-1. 아래와 같이 의존성 파일을 추가해주세요.
+actuator를 추가하는 이유는 아래에서 언급하겠습니다.
+
+dependencies {
+    implementation('org.springframework.boot:spring-boot-starter-web')
+    implementation('org.springframework.cloud:spring-cloud-starter-config')
+    implementation('org.springframework.boot:spring-boot-starter-actuator')
+}
+3.2 bootstrap.yml 설정파일.
+기존의 우리는 설정 파일을 application.yml로 이용하였지만 Client 앱에서는 bootstrap.yml을 이용할 것입니다.
+스프링 클라우드는 bootstrap.yml을 파일에서 spring.application.name으로 지정 된 앱 이름을 찾고 설정 정보를 읽어올 수 있는 Config Server의 위치를 파악합니다. 그렇기 때문에 설정 서버의 위치를 파악한 뒤에 설정 정보를 읽어오기 위해 bootsrap.yml 파일이 application.yml 파일보다 먼저 로딩됩니다.
+
+Cloud Foundary는 어플리케이션이 구동 될때 Config를 주입하는데 Environment와 Cli 2가지 표준 방법을 제공합니다. 하지만 Spring Boot 앱은 VCAP_SERVICES라는 또다른 환경 변수를 통해 Config를 주입할 수 있습니다.
+yml파일에서 cloud config uri는 VCAP_SERVICES를 통하여 uri를 가져오지만 선언되어 있지 않을 경우 입력 된 상수(http://localhost:4670)로%EB%A1%9C) 입력됩니다.
+
+server:
+  port: 8080
+
+spring:
+  application:
+    name: kasha
+  cloud:
+    config:
+      uri: ${vcap.services.configuration-service.credentials.uri:http://localhost:4670}
+3.3 설정 파일의 내용을 동적으로 출력할 컨트롤러
+깃허브 저장소에서 선언한 속성 파일의 데이터를 잘 가지고 오는지 확인하기 위하여 간단한 RestController를 만들어 확인해보겠습니다.
+그런데 컨트롤러에 @RefreshScope라는 애노테이션이 붙어 있습니다. 이는 actuator의 refresh 이벤트가 발생했을때 해당 클래스에서 주입되는 속성 Value들을 어플리케이션의 재시작이 없이도 실시간으로 반영되도록 만들어줍니다.
+
+@RestController
+@RefreshScope
+public class ConfigTestController {
+
+    @Value("${kasha.hello}")
+    private String str;
+
+    @GetMapping("/test")
+    public String test() {
+        return str;
+    }
+}
+3.4 어플리케이션 재시작없이 원격 설정 변경을 위한 작업
+아래와 같이 application.yml 파일에 속성을 추가하게 되면 http://localhost:8080/actuator/refresh 경로가 열리게 되고 이 경로에 POST로 요청을 하게 되면 설정 파일을 새로 읽어들여서 어플리케이션을 재기동하게 됩니다.
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh
+3.5 실행
+클라이언트 앱을 실행시킬때에는 저장소에서 읽어올 설정파일의 profile을 지정해야합니다.
+IntelliJ를 이용한다면 Edit Configuration에서 Active Profile 값에 profile을 지정해줍니다. CLI 에서 실행한다면, build.gradle 파일을 아래와 같이 추가설정을 해주고 (환경변수로 지정해도 된다)
+
+bootRun {
+    systemProperties = System.properties
+}
+프로젝트 디렉토리로 가서 아래와 같이 실행시켜도 됩니다.
+
+gradle bootRun -Dspring.profiles.active=dev
+클라이언트 앱이 실행되면 아래와 같은 로그를 볼수 있습니다.
+이는 http://localhost:4670 Config Server를 통하여 kasha-dev.yml 파일을 가져왔음을 알수 있다.
+
+Fetching config from server at : http://localhost:4670
+Located environment: name=kasha, profiles=[dev], label=null, version=3e6827fd3dfc0e79e687094a7d67de787eeda25d, state=null
+Located property source: CompositePropertySource {name='configService', propertySources=[MapPropertySource {name='configClient'}, MapPropertySource {name='https://github.com/SeoJinHyuk14/Msa-config/kasha-dev.yml'}]}
+그러면 구현한 RestController를 통하여 속성 데이터를 잘 가져왔는지 확인해보자.
+
+curl http://localhost:8080/test
+dev world!
+잘 가져오고 있으니 kasha-dev.yml 파일의 kasha.hello 값을 dev changed world!로 바꾸어 push 해보자.
+그런 다음에 클라이언트 앱에 설정 파일을 다시 가져오라고 요청해보자
+
+curl -X POST http://localhost:8080/actuator/refresh
+그러면 클라이언트 앱은 속성 파일을 다시 가져와 서버가 재구동 되는것을 볼수 있고 RestController에 다시 요청해보면 응답이 바뀐것을 알수 있다.
+
+curl http://localhost:8080/test
+dev changed world!
+4. 보안
+우리는 설정 파일 저장소에 접근하기 위하여 Config Server의 application.yml을 통하여 spring.cloud.config.server.git.uri를 설정하였습니다.
+하지만 이는 public 저장소를 이용하였기 때문에 접속이 가능하였던것이며 private 저장소일 경우 spring.cloud.config.server.git.username과 spring.cloud.config.server.git.password를 입력해야 저장소에 접근 할 수 있습니다. (운영 서버의 경우 SSH Public Key를 이용해 접속하여도 됩니다.)
+
+또한 우리는 Config Server 자체에도 HTTP 기본 인증으로 보호할 수 있습니다.
+이를 위해 spring-boot-starter-security를 추가하여 security.user.name과 security.user.password를 설정하면 됩니다.
+스프링 시큐리티의 UserDetailsService 구현을 통하여 인증 방식을 원하는 대로 처리할 수도 있습니다.
+
+5. Spring Cloud Bus
+Config Client 앱에서 원격으로 설정을 주입하는 과정을 위해 /actuator/refresh를 호출하는 일련의 과정을 보았습니다. 하지만 쿠버네티스 등을 이용하여 서비스를 제공하여 클라이언트 앱이 수십개라면 /actuator/refresh 종단점을 앱 갯수만큼 호출하여야 할까요?
+이를 위하여 Spring Cloud Bus를 사용하여 설정 변경 내용을 여러 클라이언트 앱에 한번에 적용할 수 있습니다.
+스프링 클라우드 버스는 모든 서비스를 스프링 클라우드 스트림이 장착된 버스를 통해 연결하며 바인딩 추상화를 통해 RabbitMQ, Kafka, Reactor Project 등 다양한 메시징 기술을 지원합니다.
+
+Config Server 프로젝트에 RabbitMQ용 클라우드 버스를 추가해줍니다.
+
+dependencies {
+    implementation('org.springframework.cloud:spring-cloud-starter-bus-amqp')
+}
+application.yml에 연결 설정을 해줍니다.
+
+spring:
+  rabbitmq:
+    host: kasha-mq
+    port: 5877
+    username: user
+    password: secret
+이 연결 정보는 스프링 부트 AMQP 자동 설정을 통해 ConnectionFactory 인스턴스에 전달됩니다. 버스 클라이언트는 메시지가 전송되기를 기다리다가 새로고침 메시지를 받으면 RefreshScopeRefreshedEvent를 발생시켜 설정을 갱신합니다.
+
+스프링 클라우드 이벤트 버스를 통한 새로고침 경로는 다음과 같습니다.
+
+curl -X POST http://localhost:8080/actuator/bus/refresh
+
+# 마이크로서비스 시작하기 (4편) - 세션 클러스터링
+ 
+
+HTTP는 기본적으로 Connectionless하고 Stateless한 프로토콜이지만 로그인 상태 유지 등을 위한 목적으로 Session 혹은 Cookie를 이용하여 Stateful하게 사용합니다.
+그런데 하나의 WAS에서 Session을 이용하여 서비스를 제공하는 서버에서 사용자가 증가해 서버를 증설하게 되었을때 각 WAS는 개별적으로 세션을 관리하기 때문에 세션이 공유 되지 않습니다.
+이는 로드벨런서를 통해 로그인 요청이 1번 WAS에 들어와 로그인 처리를 하였지만 권한이 필요한 다른 요청이 2번 WAS에 들어왔을때 해당 WAS의 세션에는 권한이 인가되어 있지 않아 올바르지 않게 작동한다는 것을 의미합니다.
+이 문제를 해결하기 위해서는 두 서버간 세션이 공유되어야 하고 이를 세션 클러스터링이라 합니다.
+
+WAS의 설정 파일에 공유되어야 할 IP와 Port정보를 등록하는 것입니다.
+(톰캣 클러스터링 설정 방법 : http://tomcat.apache.org/tomcat-9.0-doc/cluster-howto.html)
+서비스가 Scale Out이 될 때마다 IP와 Port 정보를 지정해주어야 한다는 것은 굉장히 번거로운 작업입니다.
+
+
+특히나 클라우드를 사용할 경우 Auto Scale을 위해서는 자동으로 세션 클러스터링이 지원 되야합니다.
+Spring Session은 이를 위한 유용한 해결책입니다.
+
+스프링 세션으로 HTTP 세션 다루기
+implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+implementation 'org.springframework.session:spring-session-data-redis'
+implementation 'biz.paluch.redis:lettuce:4.5.0.Final'   // redis client lettuce
+spring:
+  redis:
+    port: 6379
+    host: 127.0.0.1
+    lettuce:
+      pool:
+        max-active: 10
+        max-idle: 10
+        min-idle: 2
+@EnableRedisHttpSession
+public class RedisConfig {
+    /**
+     springboot 2.0이상부터는 auto-configuration으로 redisConnectionFactory, RedisTemplate, StringTemplate빈들이
+      자동으로 생성되기 때문에 굳이 Configuration을 만들지 않아도 즉시 사용가능하다.
+     */
+    @Bean
+    public LettuceConnectionFactory connectionFactory() {
+        return new LettuceConnectionFactory();
+    }
+
+    @Bean
+    public RedisTemplate<String, Object> redisTemplate() {
+        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(connectionFactory());
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        return redisTemplate;
+    }
+}
+@EnableRedisHttpSession 어노테이션이 SpringSessionRepositoryFilter(Filter의 구현체) 라는 빈을 생성하여 기존에 사용하던 WAS의 HttpSession 구현체에서 Spring Session의 HttpSession 구현체로 바꾸게 됩니다.
+
+Redis 실행과 테스트
+Redis를 설치 및 실행하고 redis-cli를 통해 터미널로 접속한 뒤 테스트를 진행하겠습니다.
+
+127.0.0.1:6379> keys *
+(empty list or set)
+현재 세션은 아무것도 등록이 되어있지 않기 때문에 output이 비어있는것을 알 수 있습니다.
+아래와 같이 컨트롤러를 작성하고 /test/redis에 접속하면 세션이 새로 등록되게 되고 이를 터미널을 통해 조회해 볼수 있습니다.
+
+@Value("${CF_INSTANCE_IP:127.0.0.1}")
+private String ip;
+
+@GetMapping("/test/redis")
+public Map redisTest(HttpSession session){
+    UUID uid = Optional.ofNullable(UUID.class.cast(session.getAttribute("uid")))
+            .orElse(UUID.randomUUID());
+    session.setAttribute("uid", uid);
+
+    Map m = new HashMap<>();
+    m.put("instance_ip", this.ip);
+    m.put("uuid", uid.toString());
+    return m;
+}    
+127.0.0.1:6379> keys *
+1) "spring:session:expirations:1560917700000"
+2) "spring:session:index:org.springframework.session.FindByIndexNameSessionRepository.PRINCIPAL_NAME_INDEX_NAME:user"
+3) "spring:session:sessions:expires:8046782b-8bfc-4349-bef2-fff7db37b373"
+4) "spring:session:sessions:8046782b-8bfc-4349-bef2-fff7db37b373"
+5) "spring:session:expirations:1560918300000"
+Redis를 통하여 세션을 공유하기 때문에 여러번 접속하거나 다중화 된 다른 어플리케이션 서버를 통하여 요청을 하더라도 같은 결과를 반환하는것을 알 수 있습니다.
+터미널에서 flushall을 입력하게 되면 모든 데이터가 지워지는 것을 알수 있고
+/test/redis에 다시 접속하게 되면 새로운 세션이 등록되는 것 역시 알수 있습니다
+
+
+
+# 마이크로서비스 시작하기 (5편) - 분산 트랜잭션
+
+ 
+트랜잭션은 모든 작업이 성공한 경우에만 작업이 커밋되어 데이터베이스에 반영되고 하나의 작업이라도 도중에 실패하면 모든 작업을 롤백하는 'all or nothing'의 조건을 만족해야 합니다. 데이터베이스가 N대의 샤드로 구성된 웹 서비스 환경에서는 분산 트랜잭션을 이용하여 이를 만족할수 있습니다.
+
+분산 트랜잭션
+분산 트랜잭션(distributed transaction)은 2개 이상의 네트워크 시스템 간의 트랜잭션입니다. 일반적으로 시스템은 트랜잭션 리소스의 역할을 하고, 트랜잭션 매니저는 이러한 리소스에 관련된 모든 동작에 대해 트랜잭션의 생성 및 관리를 담당합니다.
+분산 트랜잭션은 다른 트랜잭션처럼 4가지 ACID(원자성, 일관성, 고립성, 지속성) 속성을 갖추어야 하며 여기에서 원자성은 일의 단위(UOW)를 위해 'all or nothing' 결과를 보증해야 합니다.
+
+XA
+XA는 분산 트랜잭션 처리를 위해 X/Open이 제정한 표준 스펙입니다. 멀티 트랜잭션 관리자와 로컬 리소스 관리자 사이의 인터페이스, 리소스 관리자가 트랜잭션을 처리하기 위해 필요한 것을 규정하고 있습니다.
+
+2단계 커밋 프로토콜 수행을 통해, 분산된 데이터베이스에서 발생하는 각 트랜잭션을 원자적인 트랜잭션으로 구성할 수 있게 합니다.
+
+
+ 
+2단계 커밋 프로토콜의 흐름
+
+ 
+
+2단계 커밋 프로토콜의 흐름(출처: XA Transactions (2 Phase Commit): A Simple Guide - DZone Integration)
+분산 트랜잭션의 개념 모델
+
+ 
+
+그림 5 분산 트랜잭션의 개념 모델(출처: XA transactions using Spring | JavaWorld)
+
+JTA
+JTA(Java Transaction API)는 XA 리소스(예: 데이터베이스) 간의 분산 트랜잭션을 처리하는 Java API이며 javax.transaction와 javax.transaction.xa 두 개의 패키지로 구성됩니다.
+
+Spring Boot는 Atomikos 또는 Bitronix 등 임베디드 트랜잭션 관리자 를 사용하여 여러 XA 리소스에 분산 된 JTA 트랜잭션을 지원합니다. Atomikos는 Spring Boot에 Built-in 되어 있는 가장 인기있는 오픈 소스 트랜잭션 관리자입니다.
+JTA 트랜잭션은 적합한 Java EE 응용 프로그램 서버에 배포 할 때도 지원됩니다.
+
+
+ 
+동일한 자원 관리자를 여러 트랜잭션 관리자가 safe하게 coordinate할 수 있도록 하려면 각 트랜잭션 관리자(Atomikos or Bitronix) 인스턴스를 고유 한 ID로 구성해야합니다. 기본적으로 이 ID는 트랜잭션 관리자가 실행중인 시스템의 IP 주소입니다.
+production의 고유성을 보장하기 위해서는 spring.jta.transaction-manager-id 속성 값을 각 인스턴스에 대해 고유한 값으로 설정해야 합니다.
+
+참고
+https://d2.naver.com/helloworld/5812258
+https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-jta.html
+
+
+# 마이크로서비스 시작하기 (6편) - HATEOAS
+
+
+ 
+좋은 REST API는 GET, PUT, POST, DELETE 등과 같은 동사와 HTTP 헤더, 상태 코드 등 HTTP의 기능을 최대한 올바르게 활용하는 것을 말합니다.
+REST는 어떤 기술 표준이 아닌 HTTP에 대한 일종의 아키텍처 제약사항이며 레너드 리차드슨 (Leonard Richardson)은 REST 성숙도 모델을 통해 API의 REST 원칙 준수 등급을 정의하였습니다.
+
+REST 성숙도 모델
+
+LEVEL 0. POX(Plain Old XML)의 늪
+REST를 도입하기 전 상태를 말합니다.
+모든 전송과 응답을 POST로 하며 접근 가능한 엔드 포인트는 하나이며 HTTP의 body에 정보를 넣어 전송하는 기존의 리소스 전송 방식을 사용합니다.
+
+LEVEL 1. 자원
+고유의 URI로 각각의 제공하는 자원을 주고 받습니다.
+모든 자원을 제공함으로써 클라이언트는 다양한 자원과 포맷(JSON, XML 등)을 제공 받을 수 있습니다.
+리소스를 어떻게 나누고 합칠 것인지를 고려해야 합니다.
+
+LEVEL 2. HTTP 동사
+URL과 HTTP Method, 상태 코드 등을 적극적으로 활동하며 가장 널리 알려진 방법입니다.
+
+LEVEL 3. 하이퍼미디어 컨트롤(HATEOAS)
+하이퍼 미디어의 링크를 이용하여 서비스가 제공하는 자원에 접근하기 위해 아무런 사전 지식도 요구하지 않는 수준의 API를 기술합니다.
+서버가 클리이언트에게 자원을 보내면서 다음 작업을 할 수 있는 URL을 링크로 같이 보냅니다.
+클라이언트는 링크를 확인하고 다음 작업을 할 수 있는 URL을 확인합니다.
+REST API의 URL 변경시 단점을 해결 할 수 있습니다.
+어떻게 전달해야 링크를 보고 리소스를 찾아갈 수 있는 문서가 될 수 있는지를 고려해야 합니다.
+
+HATEOAS (Hypermedia As The Engine Of Application State)
+하이퍼 미디어 어플리케이션의 상태를 관리하기 위한 매커니즘을 말합니다.
+REST API에서 서버가 클라이언트에 리소스를 넘겨줄 때 특정 부가적인 리소스의 링크 정보를 넘겨주어 클라이언트가 이를 참고하여 사용 할 수 있도록 합니다.
+
+HATEOAS를 사용하는 이유는 다음과 같은 REST API의 단점을 보완하기 위해서입니다.
+
+End Point URL 변경 제한.
+엔드 포인트 URL을 변경하면 모든 클라이언트의 URL 역시 변경해야 합니다.
+자원의 상태를 고려하지 않음.
+전달받은 정적 자원의 상태에 따른 로직이 클라이언트에서 처리되어야 함.
+위 단점들을 LINK에 사용 가능한 URL을 리소스로 전달하여 클라이언트가 참고하여 사용 할 수 있도록 하여 극복합니다.
+이러한 링크정보를 JSON으로 표현한 사실상의 표준이 있는데, 바로 HAL(Hpyertext Application Language)이며 컨텐트 타입은 application/hal+json입니다.
+
+ 
+
+HAL을 사용하면 REST 자원을 표시하기 위한 자료 구조를 그때그때 따로 만들지 않아도 HATEOAS를 구현할수 있습니다.
+
+스프링 부트는 HAL브라우저라고 하는 아주 편리한 HAL 클라이언트를 지원합니다.
+org.springframework.boot:spring-boot-starter-actuator
+org.springframework.data:spring-data-rest-hal-browser를 의존 관계로 추가하면 됩니다.
+스프링 HATEOAS는 스프링 MVC 위에 존재하며 자원에 대한 정보와 관련 링크를 기술하고 사용하는 데 필요한 기능을 제공합니다.
+데이터와 관련 링크를 담는 Resource 클래스는 T타입의 객체를 ResourceAssembler를 이용해 Resource나 Resources로 전환하여 사용합니다.
+
+
+ 
+HATEOAS는 Link 구조를 가지고 있어서 자신과 연관 된 다른 MicroService들을 연결할때 이용됩니다.
+
+또한 마이크로서비스간 RestTemplate를 이용하여 API를 호출할때도 링크 경로를 받아 링크를 따라가고 최종 결과를 반환해주는 Traverson 클라이언트를 제공합니다.
+아래와 같이 base URI와 클라이언트가 처리해야할 미디어타입을 지정해서 traverson bean을 등록합니다.
+
+@Bean
+@Lazy
+Traverson traverson(RestTemplate restTemplate) {
+    Traverson traverson = new Traverson(this.baseUri, MediaTypes.HAL_JSON);
+    traverson.setRestOperations(restTemplate);
+    return traverson;
+}
+Traverson의 follow 메소드가 링크를 연쇄적으로 따라가는 일을 간단하게 만들어주며 toObject 메소드에 ParameterizedTypeReference의 서브 클래스를 파라미터로 넘겨서 결과값을 제네릭을 포함하는 Resources로 변환할 수 있습니다.
+
+Resources<Actor> actorResources = this.traverson
+   .follow("actors", "search", "by-movie")
+   .withTemplateParameters(Collections.singletonMap("movie", nameOfMovie))
+   .toObject(new ParameterizedTypeReference<Resources<Actor>>() {
+   });
+
+
+마이크로서비스 시작하기 (7편) - 라우팅
+만능 개발자 SKaSha 2019. 6. 25. 15:07
+
+ 
+MSA를 포함하는 분산 환경에서의 서비스 호출은 IP주소와 포트를 이용하여 이루어지는데, 클라우드 환경이 되면서 오토 스케일링을 통해 동적으로 서비스가 돌아가면서 IP나 포트 역시 동적으로 변경되는 일이 흔하게 되었습니다.
+그래서 서비스 클라이언트는 서비스를 호출할때 서비스의 위치(IP, Port)를 조회 할 필요성을 느끼게 되었는데 이를 서비스 디스커버리(Service Discovery)라고 합니다.
+서비스 디스커버리는 기본적으로 서비스를 등록하고 등록된 서비스의 목록을 리턴하는 기능이지만 서비스의 Health check를 통하여 어떤 서비스 인스턴스가 살아있는지, 서비스간의 로드밸런스, 서버 목록에서의 Master/Slave 정보 리턴, 서버에 접속하기 위한 인증키 정보 리턴, 보안과 암호화와 같은 다양한 기능으로 확장이 가능합니다.
+
+서비스 레지스트리는 모두 동등하게 생성되는 것이 아니며 물리적인 제약과 CAP 이론에도 제약을 받습니다. CAP theorem이란 분산 스토리지(서비스)는 일관성(Consistency), 가용성(Availability), 분할 허용성(Partition tolerance)에서 두가지만 함께 제공 받을 수 있다는 것을 말합니다.
+
+CAP theorem
+일관성은 read operation이 최신 데이터를 받는 것을 보장하는 것이며 만약 이를 보장하기 어렵다면 에러를 돌려줘야 합니다. 일반적으로 분산 스토리지를 구현할 때 위 특징 중 일관성이 가장 구현하기 어려운 특성입니다.
+가용성은 모든 operation이 에러가 아닌 데이터를 돌려주는 것이며 이때 돌려주는 값은 최신 값이 아니어도 상관없습니다. 심지어 Eventual consistency와 가용성을 보장하는 시스템에서는 실제로 존재할 수 없는 데이터 조합이 생길 수도 있습니다.
+
+ 
+
+분할 허용성은 분산 혹은 파티션 상황에서도 시스템이 정상 작동해야 한다는 것이며 시스템이 정상 동작한다는 것이 언제나 최신 데이터를 보장하거나 에러가 아닌 값을 준다는 것이 아닙니다.
+
+클라우드에서는 AP(가용성, 분할 허용성)이 필수가 되기 때문에 일관성에 대한 대비책을 보완해야 합니다. Consistency 관점에서 클라우드 시스템은 기본적으로 Availability를 지원하는 복제 노드들에 동일한 데이터를 보내려고 할 때 특정 노드들은 쓰기에 성공해도 다른 몇 노드들이 어떤 사정으로 쓰기에 실패한 경우 시스템에서는 서로 다른 데이터 상태가 공존하게 되어 일관성 있지 않은 상태가 됩니다. 이를 위해서는 무거운 Consistency 정책 대신 Eventually Consistency를 이용하여 일관성을 해결하게 됩니다.
+Eventually Consistency는 모든 요청에 대해 모든 서버가 완벽히 같은 순간에 같은 값을 갖지는 않지만 결국에는 같은 값을 가질 것을 보장하는 것입니다.
+
+Service Discovery
+서비스 디스커버리는 Client Side Discovery 방식과 Server Side Discovery 방식으로 나뉩니다.
+
+Client Side Discovery
+Service A의 인스턴스들이 생성이 될때 서비스의 주소와 포트 정보를 Service Registry에 등록합니다.
+Service A를 호출하고자 하는 클라이언트는 Service registry에 Service A의 주소를 물어보고 등록된 주소를 받아서 그 주소로 서비스를 호출하게 됩니다.
+
+ 
+Client Side Discovery
+
+ 
+
+Server Side Discovery
+호출이 되는 서비스 앞에 일종의 proxy 서버 (로드밸런서)를 넣는 방식인데 서비스 클라이언트는 이 로드밸런서를 호출하면 로드밸런서가 Service registry로 부터 등록된 서비스의 위치를 리턴하고 이를 기반으로 라우팅을 하는 방식입니다.
+일반적으로 클라우드의 로드밸런서가 이 방식에 해당됩니다.
+
+ 
+Server Side Discovery
+
+ 
+
+DiscoveryClient
+스프링 클라우드는 DiscoveryClient 추상화를 통해 클라이언트가 다양한 유형의 서비스 레지스트리를 쉽게 이용할 수 있고 다양한 구현체를 쉽게 플러그인해서 사용할 수 있게 해줍니다. 전문화된 Service Discovery로는 클라우드 파운드리，아파치 ZooKeeper, Hashcorp의 Consul, Netflix Eureka 등이 있습니다.
+
+참고
+CAP theorem
+클라우드 환경에서 새로운 ACID, BASE 그리고 CAP
+MSA에서 Service discovery 패턴   
