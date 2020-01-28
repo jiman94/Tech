@@ -1,8 +1,63 @@
 # Hystrix, Hystrix dashboard, Turbine 의 구성
+Dependencies Used
+Spring Boot 2.1.9
+Spring Cloud Gateway
+Spring Cloud Netflix Hystrix
+Spring Cloud Netflix Hystrix Dashboard
 
 http://localhost:8060/personalized/1
 
 http://localhost:8070/recommendations
+
+curl -d '{"username":"foo","password":"foo"}' -H "Content-Type: application/json" -X POST http://localhost:8080/authenticate
+
+
+
+
+### Hystrix Dashboard 인스턴스 
+http://localhost:8081/hystrix
+
+### Hystrix 적용 인스턴스 
+http://localhost:8080/actuator/hystrix.stream
+
+```java
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.netflix.hystrix.EnableHystrix;
+
+@SpringBootApplication
+@EnableHystrix
+public class DemoApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(DemoApplication.class, args);
+    }
+}
+
+
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+
+@RestController
+public class SampleController
+{
+    @RequestMapping(value = "/")
+    @HystrixCommand(fallbackMethod = "planb", commandProperties = {
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "1000")
+    })
+    public String hello() throws InterruptedException {
+        Thread.sleep(2000);
+        return "Hello World";
+    }
+    private String planb() {
+        return "Sorry our Systems are busy! try again later.";
+    }
+}   
+```
+
+
 
 ### Turbine
 #### Cluster via Turbine (custom cluster): 
@@ -50,23 +105,26 @@ ext {
 }
 
 dependencies {
-    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-server'
-    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+
+    compile 'org.springframework.boot:spring-boot-starter-actuator'
+
+    compile 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-server'
+    compile 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     
-    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-hystrix-dashboard'
-    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-hystrix'
+    compile 'org.springframework.cloud:spring-cloud-starter-netflix-hystrix-dashboard'
+    compile 'org.springframework.cloud:spring-cloud-starter-netflix-hystrix'
     
-    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+    compile 'org.springframework.cloud:spring-cloud-starter-openfeign'
     
-    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-zuul'
+    compile 'org.springframework.cloud:spring-cloud-starter-netflix-zuul'
     
-    implementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
-    implementation 'org.springframework.cloud:spring-cloud-starter-zipkin'
+    compile 'org.springframework.cloud:spring-cloud-starter-sleuth'
+    compile 'org.springframework.cloud:spring-cloud-starter-zipkin'
     
-    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-turbine'
+    compile 'org.springframework.cloud:spring-cloud-starter-netflix-turbine'
     
     
-    implementation 'de.codecentric:spring-boot-admin-starter-server'
+    compile 'de.codecentric:spring-boot-admin-starter-server'
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
