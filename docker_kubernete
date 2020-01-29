@@ -1,0 +1,48 @@
+1. Enabling Hyper-V
+Open a PowerShell console as Administrator
+
+
+2. Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All
+
+PS C:\WINDOWS\system32> Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All
+
+Path          :
+Online        : True
+RestartNeeded : False
+
+
+3. minikube start --vm-driver=hyperv 
+
+PS C:\WINDOWS\system32> minikube start --vm-driver=hyperv
+* minikube v1.6.2 on Microsoft Windows 10 Pro 10.0.17763 Build 17763
+* Selecting 'hyperv' driver from user configuration (alternates: [])
+* Downloading VM boot image ...
+    > minikube-v1.6.0.iso.sha256: 65 B / 65 B [--------------] 100.00% ? p/s 0s
+    > minikube-v1.6.0.iso: 150.93 MiB / 150.93 MiB [-] 100.00% 5.01 MiB p/s 30s
+* Creating hyperv VM (CPUs=2, Memory=2000MB, Disk=20000MB) ...
+* Preparing Kubernetes v1.17.0 on Docker '19.03.5' ...
+* Downloading kubeadm v1.17.0
+* Downloading kubelet v1.17.0
+* Pulling images ...
+* Launching Kubernetes ...
+* Waiting for cluster to come online ...
+* Done! kubectl is now configured to use "minikube"
+! C:\Program Files\Docker\Docker\resources\bin\kubectl.exe is version 1.15.5, and is incompatible with Kubernetes 1.17.0. You will need to update C:\Program Files\Docker\Docker\resources\bin\kubectl.exe or use 'minikube kubectl' to connect with this cluster
+PS C:\WINDOWS\system32>
+
+4. kubectl config use-context minikube
+
+PS C:\WINDOWS\system32> kubectl config use-context minikube
+Switched to context "minikube".
+
+PS C:\WINDOWS\system32> kubectl get pods --context=minikube
+No resources found.
+
+
+5. minikube dashboard
+
+PS C:\WINDOWS\system32> minikube dashboard
+* Verifying dashboard health ...
+* Launching proxy ...
+* Verifying proxy health ...
+* Opening http://127.0.0.1:51980/api/v1/namespaces/kubernetes-dashboard/services/http:kubernetes-dashboard:/proxy/ in your default browser...
