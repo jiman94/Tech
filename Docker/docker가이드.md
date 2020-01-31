@@ -221,3 +221,28 @@ $ docker-compose up --build
 컨테이너를 정지하려면 down 옵션을 주면 된다.
 
 $ docker-compose down
+
+
+```yml 
+docker run -d \
+  -e MYSQL_ALLOW_EMPTY_PASSWORD=true \
+  --name mysql \
+  --network=app-network \
+  mysql:5.7
+
+docker exec -it mysql mysql
+
+create database wp CHARACTER SET utf8;
+grant all privileges on wp.* to wp@'%' identified by 'wp';
+flush privileges;
+
+quit
+
+docker run -d -p 8000:80 \
+  --network=app-network \
+  -e WORDPRESS_DB_HOST=mysql \
+  -e WORDPRESS_DB_NAME=wp \
+  -e WORDPRESS_DB_USER=wp \
+  -e WORDPRESS_DB_PASSWORD=wp \
+  wordpress
+```  

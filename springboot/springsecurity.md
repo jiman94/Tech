@@ -29,6 +29,26 @@ public class MyUserDetailsService implements UserDetailsService {
 }
 ```
 
+```java
+@Configuration
+@EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
+@Slf4j 
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+		@Bean
+		public PasswordEncoder encoder() {
+		    return new BCryptPasswordEncoder();
+		}
+	
+	    @Override
+	    @Autowired
+	    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		 auth.userDetailsService(myUserDetailsService).passwordEncoder(encoder());
+	        System.out.println("Done...finito");
+	    }
+	
+```
+
 
 ```java
 
