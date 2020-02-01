@@ -1,6 +1,9 @@
 # Helm
 > Helm은 Kubernetes 애플리케이션을 설치하고 수명 주기를 관리하는 오픈 소스 패키징 도구입니다
 
+C:\Users\jiman\AppData\Roaming\helm
+
+
 helm repo add stable https://kubernetes-charts.storage.googleapis.com/
 
 helm search repo stable
@@ -210,6 +213,19 @@ http://192.168.126.244:30779
 http://192.168.126.244:32514
 PS D:\2019\kubernetes-ingress\deployments\helm-chart>
 ```
+
+```yaml
+PS D:\>  helm repo update
+Hang tight while we grab the latest from your chart repositories...
+...Successfully got an update from the "stable" chart repository
+Update Complete. ⎈ Happy Helming!⎈
+```
+
+```yaml 
+
+PS D:\> helm search repo stable
+```
+
 
 https://github.com/nginxinc/kubernetes-ingress.git
 
