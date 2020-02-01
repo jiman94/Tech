@@ -191,6 +191,33 @@ NAME                          TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(
 my-nginx-ingress-controller   LoadBalancer   10.96.245.234   <pending>     80:31027/TCP,443:32437/TCP   38s   app=nginx-ingress,component=controller,release=my-nginx-ingress
 ```
 
+```yaml 
+PS D:\2019\kubernetes-ingress\deployments\helm-chart> kubectl get services --all-namespaces
+NAMESPACE              NAME                               TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)                      AGE
+default                kubernetes                         ClusterIP      10.96.0.1       <none>        443/TCP                      32h
+default                my-nginx-ingress-controller        LoadBalancer   10.96.245.234   <pending>     80:31027/TCP,443:32437/TCP   51m
+default                my-nginx-ingress-default-backend   ClusterIP      10.96.215.176   <none>        80/TCP                       51m
+default                my-release-nginx-ingress           LoadBalancer   10.96.136.200   <pending>     80:30779/TCP,443:32514/TCP   3m3s
+default                nginx                              NodePort       10.96.15.236    <none>        80:31622/TCP                 31h
+kube-system            kube-dns                           ClusterIP      10.96.0.10      <none>        53/UDP,53/TCP,9153/TCP       32h
+kubernetes-dashboard   dashboard-metrics-scraper          ClusterIP      10.96.127.44    <none>        8000/TCP                     32h
+kubernetes-dashboard   kubernetes-dashboard               ClusterIP      10.96.232.209   <none>        80/TCP                       32h
+```
+
+```yaml 
+PS D:\2019\kubernetes-ingress\deployments\helm-chart> minikube service my-release-nginx-ingress --url
+http://192.168.126.244:30779
+http://192.168.126.244:32514
+PS D:\2019\kubernetes-ingress\deployments\helm-chart>
+```
+
+https://github.com/nginxinc/kubernetes-ingress.git
+
+
+
+cd kubernetes-ingress/helm-chart
+helm install my-release . --set controller.replicaCount=5
+
 ---
 choco install kubernetes-helm
 
