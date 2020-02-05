@@ -1,4 +1,9 @@
 
+# helm 
+> 차트(chart) : 쿠버네티스 애플리케이션을 만들기위해 필요한 정보들의 묶음입니다.
+> 컨피그(config) : 배포 가능한 객체들을 만들기 위해 패키지된 차트에 넣어서 사용할 수 있는 설정들을 가지고 있습니다.
+> 릴리즈(release) : 특정 컨피그를 이용해서 실행중인 차트의 인스턴스 입니다.
+
 
 C:\Program Files\Docker\Docker\resources\bin
 D:\Project\tools
@@ -14,7 +19,7 @@ clusterrolebinding.rbac.authorization.k8s.io/tiller created
 
 
 
-D:\aa>D:\Project\tools/helm.exe init --service-account tiller
+helm init --service-account tiller
 Creating C:\Users\ryu\.helm
 Creating C:\Users\ryu\.helm\repository
 Creating C:\Users\ryu\.helm\repository\cache
