@@ -1,0 +1,193 @@
+
+### 1. 윈도우 기능 켜기 / 끄기 
+
+```bash 
+Enabling Hyper-V
+```
+
+### 2. Powershell Microsoft-Hyper-V 
+
+```bash 
+Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All
+```
+### 3. install  
+
+```bash 
+choco install minikube
+choco install kubernetes-cli
+choco install kubernetes-helm
+```
+### 삭제 
+
+```bash 
+choco uninstall kubernetes-helm
+choco uninstall minikube
+choco uninstall kubernetes-cli
+```
+
+### 다운로드 
+
+```html 
+https://github.com/kubernetes/minikube/releases
+https://kubernetes.io/docs/tasks/tools/install-kubectl/#install-kubectl-on-windows
+```
+
+
+
+### 4. 설치 파일 
+
+```bash 
+C:\ProgramData\chocolatey\lib
+C:\Program Files\Docker\Docker\resources\bin
+C:\Users\ryu\.kube
+C:\Users\ryu\.minikube
+D:\k8s
+```
+
+### 5. 환경설정 
+
+```bash 
+Path=D:\k8s
+```
+
+```bash 
+C:\Users\ryu>where minikube
+D:\k8s\minikube.exe
+
+C:\Users\ryu>where kubectl
+D:\k8s\kubectl.exe
+
+C:\Users\ryu>where helm
+D:\k8s\helm.exe
+
+C:\Users\ryu>
+```
+
+
+### 6. 구동 minikube
+```bash 
+minikube start --vm-driver=hyperv --memory 8192
+```
+
+```bash 
+PS C:\WINDOWS\system32> Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All
+Path          :
+Online        : True
+RestartNeeded : False
+PS C:\WINDOWS\system32> minikube start --vm-driver=hyperv --memory 8192
+* minikube v1.7.1 on Microsoft Windows 10 Pro 10.0.17763 Build 17763
+* Using the hyperv driver based on user configuration
+* Creating hyperv VM (CPUs=2, Memory=8192MB, Disk=20000MB) ...
+* Preparing Kubernetes v1.17.2 on Docker '19.03.5' ...
+* Pulling images ...
+* Launching Kubernetes ...
+* Enabling addons: default-storageclass, storage-provisioner
+* Waiting for cluster to come online ...
+* Done! kubectl is now configured to use "minikube"
+```
+
+### 7. 구동 dashboard
+```bash 
+PS C:\WINDOWS\system32> minikube dashboard
+* Enabling dashboard ...
+* Verifying dashboard health ...
+* Launching proxy ...
+* Verifying proxy health ...
+* Opening http://127.0.0.1:51470/api/v1/namespaces/kubernetes-dashboard/services/http:kubernetes-dashboard:/proxy/ in your default browser...
+```
+
+### minikube status
+```bash 
+PS C:\WINDOWS\system32> minikube status
+host: Running
+kubelet: Running
+apiserver: Running
+kubeconfig: Configured
+PS C:\WINDOWS\system32>
+```
+
+
+### helm version
+```bash 
+PS C:\WINDOWS\system32> helm version
+version.BuildInfo{Version:"v3.0.3", GitCommit:"ac925eb7279f4a6955df663a0128044a8a6b7593", GitTreeState:"clean", GoVersion:"go1.13.6"}
+```
+### deployment.apps/nginx-deployment 생성 
+```bash 
+PS C:\WINDOWS\system32> kubectl apply -f https://k8s.io/examples/application/deployment.yaml
+deployment.apps/nginx-deployment created
+```
+
+### kubectl describe deployment nginx-deployment 정보 조회 
+```bash 
+PS C:\WINDOWS\system32> kubectl describe deployment nginx-deployment
+Name:                   nginx-deployment
+Namespace:              default
+CreationTimestamp:      Thu, 06 Feb 2020 15:00:41 +0900
+Labels:                 <none>
+Annotations:            deployment.kubernetes.io/revision: 1
+                        kubectl.kubernetes.io/last-applied-configuration:
+                          {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"name":"nginx-deployment","namespace":"default"},"spec":{"replica...
+Selector:               app=nginx
+Replicas:               2 desired | 2 updated | 2 total | 1 available | 1 unavailable
+StrategyType:           RollingUpdate
+MinReadySeconds:        0
+RollingUpdateStrategy:  25% max unavailable, 25% max surge
+Pod Template:
+  Labels:  app=nginx
+  Containers:
+   nginx:
+    Image:        nginx:1.7.9
+    Port:         80/TCP
+    Host Port:    0/TCP
+    Environment:  <none>
+    Mounts:       <none>
+  Volumes:        <none>
+Conditions:
+  Type           Status  Reason
+  ----           ------  ------
+  Available      False   MinimumReplicasUnavailable
+  Progressing    True    ReplicaSetUpdated
+OldReplicaSets:  <none>
+NewReplicaSet:   nginx-deployment-54f57cf6bf (2/2 replicas created)
+Events:
+  Type    Reason             Age   From                   Message
+  ----    ------             ----  ----                   -------
+  Normal  ScalingReplicaSet  20s   deployment-controller  Scaled up replica set nginx-deployment-54f57cf6bf to 2
+```
+### NodePort
+```bash 
+PS C:\WINDOWS\system32> kubectl expose deployment nginx-deployment --type=NodePort
+service/nginx-deployment exposed
+````
+### bectl get svc
+```bash 
+PS C:\WINDOWS\system32> kubectl get svc
+NAME               TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+kubernetes         ClusterIP   10.96.0.1       <none>        443/TCP        18m
+nginx-deployment   NodePort    10.98.135.157   <none>        80:32645/TCP   9s
+```
+### 호출 아이피 확인 
+```bash 
+PS C:\WINDOWS\system32> minikube ip
+192.168.120.61
+PS C:\WINDOWS\system32>
+
+http://192.168.120.61:32645/
+
+```
+
+### 접속 
+```bash 
+
+
+PS C:\WINDOWS\system32> minikube service nginx-deployment
+|-----------|------------------|-------------|-----------------------------|
+| NAMESPACE |       NAME       | TARGET PORT |             URL             |
+|-----------|------------------|-------------|-----------------------------|
+| default   | nginx-deployment |             | http://192.168.120.61:32645 |
+|-----------|------------------|-------------|-----------------------------|
+* Opening service default/nginx-deployment in default browser...
+PS C:\WINDOWS\system32>
+
+```
