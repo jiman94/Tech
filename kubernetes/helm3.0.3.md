@@ -1,9 +1,14 @@
-The following commands were removed:
+### Migration from Helm 2 to Helm 3
+#### The following commands were removed:
 helm home
+
 helm init
+
 helm reset
+
 helm serve
 
+https://developer.ibm.com/blogs/kubernetes-helm-3/
 
 ```bash 
 C:\Users\ryu>helm env
