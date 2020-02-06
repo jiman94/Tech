@@ -371,6 +371,65 @@ PS C:\WINDOWS\system32> minikube service list
 PS C:\WINDOWS\system32>
 ```
 
+
+####  kubectl describe svc istio-ingressgateway -n istio-system
+
+```bash 
+PS C:\WINDOWS\system32> kubectl describe svc istio-ingressgateway -n istio-system
+Name:                     istio-ingressgateway
+Namespace:                istio-system
+Labels:                   app=istio-ingressgateway
+                          istio=ingressgateway
+                          operator.istio.io/component=IngressGateway
+                          operator.istio.io/managed=Reconcile
+                          operator.istio.io/version=1.4.3
+                          release=istio
+Annotations:              kubectl.kubernetes.io/last-applied-configuration:
+                            {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"app":"istio-ingressgateway","istio":"ingressgateway","operator...
+Selector:                 app=istio-ingressgateway
+Type:                     LoadBalancer
+IP:                       10.100.164.98
+Port:                     status-port  15020/TCP
+TargetPort:               15020/TCP
+NodePort:                 status-port  32342/TCP
+Endpoints:                172.17.0.16:15020
+Port:                     http2  80/TCP
+TargetPort:               80/TCP
+NodePort:                 http2  30390/TCP
+Endpoints:                172.17.0.16:80
+Port:                     https  443/TCP
+TargetPort:               443/TCP
+NodePort:                 https  32334/TCP
+Endpoints:                172.17.0.16:443
+Port:                     kiali  15029/TCP
+TargetPort:               15029/TCP
+NodePort:                 kiali  31182/TCP
+Endpoints:                172.17.0.16:15029
+Port:                     prometheus  15030/TCP
+TargetPort:               15030/TCP
+NodePort:                 prometheus  31385/TCP
+Endpoints:                172.17.0.16:15030
+Port:                     grafana  15031/TCP
+TargetPort:               15031/TCP
+NodePort:                 grafana  30105/TCP
+Endpoints:                172.17.0.16:15031
+Port:                     tracing  15032/TCP
+TargetPort:               15032/TCP
+NodePort:                 tracing  31953/TCP
+Endpoints:                172.17.0.16:15032
+Port:                     tls  15443/TCP
+TargetPort:               15443/TCP
+NodePort:                 tls  32288/TCP
+Endpoints:                172.17.0.16:15443
+Session Affinity:         None
+External Traffic Policy:  Cluster
+Events:                   <none>
+PS C:\WINDOWS\system32>
+
+```
+
+
+
 #### npm install
 
 ```bash 
@@ -406,4 +465,8 @@ Run ncu -u to upgrade package.json
 
 D:\k8s\istio-1.4.3\samples\bookinfo\src\ratings>minikube service list
 ```
+
+
+#### Telepresence proxy ( 네이버 )
+> https://d2.naver.com/helloworld/4817173
 
