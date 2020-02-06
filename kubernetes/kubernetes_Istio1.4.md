@@ -326,3 +326,84 @@ reviews-v3-68964bc4c8-hsks9         1/1     Running   0          25m
 
 D:\k8s\istio-1.4.3>
 ```
+
+
+#### minikube service list
+
+```bash 
+PS C:\WINDOWS\system32> minikube service list
+|----------------------|---------------------------|--------------------------------|-----|
+|      NAMESPACE       |           NAME            |          TARGET PORT           | URL |
+|----------------------|---------------------------|--------------------------------|-----|
+| default              | details                   | No node port                   |
+| default              | kubernetes                | No node port                   |
+| default              | nginx-deployment          | http://192.168.120.61:32645    |
+| default              | productpage               | No node port                   |
+| default              | ratings                   | No node port                   |
+| default              | reviews                   | No node port                   |
+| istio-system         | grafana                   | No node port                   |
+| istio-system         | istio-citadel             | No node port                   |
+| istio-system         | istio-egressgateway       | No node port                   |
+| istio-system         | istio-galley              | No node port                   |
+| istio-system         | istio-ingressgateway      | http://192.168.120.61:32342    |
+|                      |                           | http://192.168.120.61:30390    |
+|                      |                           | http://192.168.120.61:32334    |
+|                      |                           | http://192.168.120.61:31182    |
+|                      |                           | http://192.168.120.61:31385    |
+|                      |                           | http://192.168.120.61:30105    |
+|                      |                           | http://192.168.120.61:31953    |
+|                      |                           | http://192.168.120.61:32288    |
+| istio-system         | istio-pilot               | No node port                   |
+| istio-system         | istio-policy              | No node port                   |
+| istio-system         | istio-sidecar-injector    | No node port                   |
+| istio-system         | istio-telemetry           | No node port                   |
+| istio-system         | jaeger-agent              | No node port                   |
+| istio-system         | jaeger-collector          | No node port                   |
+| istio-system         | jaeger-query              | No node port                   |
+| istio-system         | kiali                     | No node port                   |
+| istio-system         | prometheus                | No node port                   |
+| istio-system         | tracing                   | No node port                   |
+| istio-system         | zipkin                    | No node port                   |
+| kube-system          | kube-dns                  | No node port                   |
+| kubernetes-dashboard | dashboard-metrics-scraper | No node port                   |
+| kubernetes-dashboard | kubernetes-dashboard      | No node port                   |
+|----------------------|---------------------------|--------------------------------|-----|
+PS C:\WINDOWS\system32>
+```
+
+#### npm install
+
+```bash 
+D:\k8s\istio-1.4.3\samples\bookinfo\src\ratings>npm install
+npm notice created a lockfile as package-lock.json. You should commit this file.
+npm WARN ratings No description
+npm WARN ratings No repository field.
+npm WARN ratings No license field.
+
+added 24 packages from 22 contributors and audited 31 packages in 2.962s
+found 1 high severity vulnerability
+  run `npm audit fix` to fix them, or `npm audit` for details
+
+
+   ╭────────────────────────────────────────────────────────────────╮
+   │                                                                │
+   │      New patch version of npm available! 6.13.4 -> 6.13.7      │
+   │   Changelog: https://github.com/npm/cli/releases/tag/v6.13.7   │
+   │               Run npm install -g npm to update!                │
+   │                                                                │
+   ╰────────────────────────────────────────────────────────────────╯
+
+
+D:\k8s\istio-1.4.3\samples\bookinfo\src\ratings>ncu
+Checking D:\k8s\istio-1.4.3\samples\bookinfo\src\ratings\package.json
+[====================] 3/3 100%
+
+ httpdispatcher    1.0.0  →    2.1.2
+ mongodb         ^2.2.31  →   ^3.5.2
+ mysql           ^2.15.0  →  ^2.18.1
+
+Run ncu -u to upgrade package.json
+
+D:\k8s\istio-1.4.3\samples\bookinfo\src\ratings>minikube service list
+```
+
