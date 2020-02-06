@@ -1,3 +1,10 @@
+The following commands were removed:
+helm home
+helm init
+helm reset
+helm serve
+
+
 ```bash 
 C:\Users\ryu>helm env
 HELM_REPOSITORY_CACHE="C:\Users\ryu\AppData\Local\Temp\helm\repository"
