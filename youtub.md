@@ -28,3 +28,7 @@ https://www.slideshare.net/PivotalKorea/it-4-devops-cicd-container-msa
 
 #### 도메인 모델에 따른 데이터 분리 저장과 API 연결
 https://www.slideshare.net/PivotalKorea/2-api-157456063
+
+
+#### 토크ON 65차. Git & GitHub Page 블로그 만들기 | T아카데미
+https://www.youtube.com/playlist?list=PL9mhQYIlKEhd9wCaqfXwxBT-zqgA6adlb
