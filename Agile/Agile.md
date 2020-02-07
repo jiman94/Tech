@@ -1,4 +1,6 @@
-Agile 
+# Scrum vs Kanban vs Lean vs XP
+ 
+# Agile 
 
 https://www.youtube.com/playlist?list=PL9mhQYIlKEhf3JxWcaim5anL0_pVFRsZT
 
