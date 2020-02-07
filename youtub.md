@@ -10,6 +10,10 @@ https://www.youtube.com/watch?v=QUMERCN3rZs
 #### 클라우드 네이티브와 마이크로 서비스로의 여정, 어디까지 가봤니?
 https://www.youtube.com/watch?v=jji5DHqafbw
 
+####  마이크로서비스, 어디까지 해봤니?
+https://www.youtube.com/watch?v=F7EnW8dfetU
+
+
 #### Cloud Native IT로의 전환을 위한 3가지 필수요소와 방법론
 https://www.youtube.com/watch?v=wtC5P4h6pZw
 
