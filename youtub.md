@@ -16,7 +16,15 @@ https://www.youtube.com/watch?v=wtC5P4h6pZw
 #### AWS CodeStar를 이용하면 애플리케이션의 개발-빌드-배포까지
 https://www.youtube.com/watch?v=yd-BvNRDTV8
 
+#### AWS Cloud9
+https://www.youtube.com/watch?v=3eu1US49Ddo
+
 #### AWS CodeStar: Deploying Project Application using AWS CodeStar | AWS Devops Training | Edureka
 https://www.youtube.com/watch?v=3eu1US49Ddo
 
+#### 클라우드 네이티브 IT를 위한 4가지 요소와 상관관계 - DevOps, CI/CD, Container, MSA
+> DevOps, CI/CD, Container, MSA
+https://www.slideshare.net/PivotalKorea/it-4-devops-cicd-container-msa
 
+#### 도메인 모델에 따른 데이터 분리 저장과 API 연결
+https://www.slideshare.net/PivotalKorea/2-api-157456063
