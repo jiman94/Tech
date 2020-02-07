@@ -93,3 +93,7 @@ https://www.slideshare.net/PivotalKorea/2-api-157456063
 
 #### 꿀밋업1탄_왜_마이크로서비스인가
 https://www.slideshare.net/PivotalKorea/1-157454130
+
+#### Streaming Platform으로써 Apache Kafka - Kafka Summit 2017 NY
+https://www.youtube.com/watch?v=PtILI6v0ngY
+
