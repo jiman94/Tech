@@ -32,3 +32,8 @@ https://www.slideshare.net/PivotalKorea/2-api-157456063
 
 #### 토크ON 65차. Git & GitHub Page 블로그 만들기 | T아카데미
 https://www.youtube.com/playlist?list=PL9mhQYIlKEhd9wCaqfXwxBT-zqgA6adlb
+
+
+#### [스프링 마이크로서비스] Spring Boot로 마이크로서비스 구축 (아키텍처 편)
+https://waspro.tistory.com/452?category=857035
+
