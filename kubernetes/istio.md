@@ -108,6 +108,7 @@ istio의 설정을 validation, ingestion, processing, distribution 하는 역할
 
 
 ### exec
+```yaml
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
@@ -140,7 +141,7 @@ spec:
       protocol: HTTP
     hosts:
     - "*"
-
+```
 $ kubectl get pods --all-namespaces -o jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.metadata.labels.app}{"\n"}{end}' | grep ingressgateway
 istio-ingressgateway-xxxx    istio-ingressgateway
  
