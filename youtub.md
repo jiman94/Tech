@@ -142,3 +142,9 @@ PS D:\k8s\istio-1.4.3> kubectl -n istio-system port-forward grafana-7797c87688-5
 ```
 #### Kubernetes Series Kick Start
 https://www.youtube.com/watch?v=YzaYqxW0wGs&list=PL34sAs7_26wNBRWM6BDhnonoA5FMERax0
+
+
+#### Helm v3.0 released | How to migrate from v2
+
+https://www.youtube.com/watch?v=aAPtT4uaY1o&list=PL34sAs7_26wNBRWM6BDhnonoA5FMERax0&index=32
+
