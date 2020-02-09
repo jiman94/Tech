@@ -1,5 +1,7 @@
 # istio
 
+Google, Lyft, IBM에서 내놓은 서비스 메쉬(Service Mesh) 솔루션입니다.
+서비스 메쉬는 마이크로서비스아키텍처(MSA) 구조에서 각 서비스들간의 트래픽을 제어하는 역할을 합니다.
 
 ### istio 설치
 
@@ -7,9 +9,18 @@ kubectl apply -f install/kubernetes/istio-demo.yaml
 
 kubectl get pods -n istio-system
 
+### istio의 기본 컴포넌트들은 controlZ 웹 화면
 
-Google, Lyft, IBM에서 내놓은 서비스 메쉬(Service Mesh) 솔루션입니다.
-서비스 메쉬는 마이크로서비스아키텍처(MSA) 구조에서 각 서비스들간의 트래픽을 제어하는 역할을 합니다.
+kubectl로 9876포트를 포트포워드 걸어두고 웹으로 접속하면 관련 화면이 보인다.
+
+kubectl port-forward -n istio-system pods/istio-citadel-xxxx 9876:9876
+
+https://github.com/istio/istio/releases 
+
+./bin/istioctl proxy-status
+
+./bin/istioctl proxy-config clusters -n istio-system istio-ingressgateway-xxx.istio-system
+
  
 
 ### 주요 기능
@@ -93,4 +104,52 @@ citadel을 이용해서 누가 서비스에 접근할수 있는지를 제어할 
 ### Galley
 
 istio의 설정을 validation, ingestion, processing, distribution 하는 역할을 합니다. 
+
+
+
+### exec
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: test-route
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - my-gateway
+  http:
+  - match:
+    - uri:
+        prefix: "/"
+    route:
+    - destination:
+        host: nginx.default.svc.cluster.local
+
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: my-gateway
+  namespace: default
+spec:
+  selector:
+    app: istio-ingressgateway
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*"
+
+$ kubectl get pods --all-namespaces -o jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.metadata.labels.app}{"\n"}{end}' | grep ingressgateway
+istio-ingressgateway-xxxx    istio-ingressgateway
+ 
+kubectl run nginx --image=nginx --port=80
+kubectl expose deploy nginx --port 30080 --target-port 80
+
+kubectl get svc istio-ingressgateway -n istio-system
+
+kubectl get svc -n istio-system
+
+kubectl exec -n istio-system -it istio-ingressgateway-xxxbash
 
