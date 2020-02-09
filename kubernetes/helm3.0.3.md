@@ -8,6 +8,13 @@ helm reset
 
 helm serve
 
+
+helm 2to3 convert --dry-run
+helm 2to3 cleanup
+https://github.com/helm/helm-2to3
+
+
+
 https://developer.ibm.com/blogs/kubernetes-helm-3/
 
 ```bash 
