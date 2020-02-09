@@ -140,3 +140,5 @@ grafana-7797c87688-5rcdk   1/1     Running   0          10m
 PS D:\k8s\istio-1.4.3> kubectl -n istio-system port-forward grafana-7797c87688-5rcdk 3000:3000
 
 ```
+#### Kubernetes Series Kick Start
+https://www.youtube.com/watch?v=YzaYqxW0wGs&list=PL34sAs7_26wNBRWM6BDhnonoA5FMERax0
