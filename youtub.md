@@ -110,3 +110,33 @@ https://www.youtube.com/watch?v=WFu8OLXUETY
 
 #### Monitoring Istio mesh using Grafana
 https://www.youtube.com/watch?v=J_O4pTPjR9o
+
+
+#### github kube-lab
+
+https://github.com/jmyung/kube-lab
+
+
+
+#### Setup Kubernetes Cluster using Kubeadm on CentOS 7
+
+https://www.youtube.com/watch?v=Araf8JYQn3w
+
+https://github.com/justmeandopensource/kubernetes
+
+```yaml 
+
+netstat   -an
+
+
+$ kubectl -n istio-system port-forward $(kubectl -n istio-system get pod -l app=grafana -o jsonpath='{.items[0].metadata.name}') 3000:3000 &
+
+http://localhost:3000/dashboard/db/istio-mesh-dashboard
+
+
+PS D:\k8s\istio-1.4.3> kubectl -n istio-system get pod -l app=grafana
+NAME                       READY   STATUS    RESTARTS   AGE
+grafana-7797c87688-5rcdk   1/1     Running   0          10m
+PS D:\k8s\istio-1.4.3> kubectl -n istio-system port-forward grafana-7797c87688-5rcdk 3000:3000
+
+```
