@@ -1,5 +1,13 @@
 # istio
 
+
+### istio 설치
+
+kubectl apply -f install/kubernetes/istio-demo.yaml
+
+kubectl get pods -n istio-system
+
+
 Google, Lyft, IBM에서 내놓은 서비스 메쉬(Service Mesh) 솔루션입니다.
 서비스 메쉬는 마이크로서비스아키텍처(MSA) 구조에서 각 서비스들간의 트래픽을 제어하는 역할을 합니다.
  
