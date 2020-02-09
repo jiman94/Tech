@@ -97,3 +97,16 @@ https://www.slideshare.net/PivotalKorea/1-157454130
 #### Streaming Platform으로써 Apache Kafka - Kafka Summit 2017 NY
 https://www.youtube.com/watch?v=PtILI6v0ngY
 
+
+#### Hystrix
+https://www.slideshare.net/KyoungtaeCho1/hystrix-61799837?next_slideshow=1
+
+#### Kafka 강좌 
+https://www.youtube.com/watch?v=NjHYWEV_E_o
+https://github.com/TechPrimers/spring-boot-kafka-producer-example
+
+#### Installing Istio in Kubernetes Cluster
+https://www.youtube.com/watch?v=WFu8OLXUETY
+
+#### Monitoring Istio mesh using Grafana
+https://www.youtube.com/watch?v=J_O4pTPjR9o
