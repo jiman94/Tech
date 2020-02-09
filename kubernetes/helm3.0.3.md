@@ -11,6 +11,8 @@ helm serve
 
 helm 2to3 convert --dry-run
 helm 2to3 cleanup
+helm delete --purge phpmyadmin
+
 https://github.com/helm/helm-2to3
 
 
