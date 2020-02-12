@@ -1,0 +1,73 @@
+#### helm guide
+https://helm.sh/docs/intro/using_helm/
+
+#### kubernetes-dashboard
+http://127.0.0.1:51375/api/v1/namespaces/kubernetes-dashboard/services/http:kubernetes-dashboard:/proxy/#/overview?namespace=default
+
+
+PS C:\WINDOWS\system32> minikube ip
+192.168.13.70
+
+PS C:\WINDOWS\system32> kubectl cluster-info
+Kubernetes master is running at https://192.168.13.70:8443
+KubeDNS is running at https://192.168.13.70:8443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+
+To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+PS C:\WINDOWS\system32>
+
+
+PS C:\WINDOWS\system32> Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All                                                                                                                                               
+Path          :
+Online        : True
+RestartNeeded : False
+
+PS C:\WINDOWS\system32> minikube start --vm-driver=hyperv
+* minikube v1.7.2 on Microsoft Windows 10 Pro 10.0.18363 Build 18363
+* Using the hyperv driver based on user configuration
+* Downloading VM boot image ...
+    > minikube-v1.7.0.iso.sha256: 65 B / 65 B [--------------] 100.00% ? p/s 0s
+    > minikube-v1.7.0.iso: 166.68 MiB / 166.68 MiB [-] 100.00% 19.91 MiB p/s 8s
+* Creating hyperv VM (CPUs=2, Memory=2000MB, Disk=20000MB) ...
+* Preparing Kubernetes v1.17.2 on Docker 19.03.5 ...
+* Downloading kubectl v1.17.2
+* Downloading kubeadm v1.17.2
+* Downloading kubelet v1.17.2
+* Launching Kubernetes ...
+* Enabling addons: default-storageclass, storage-provisioner
+* Waiting for cluster to come online ...
+* Done! kubectl is now configured to use "minikube"
+
+PS C:\WINDOWS\system32> minikube dashboard
+* Enabling dashboard ...
+* Verifying dashboard health ...
+* Launching proxy ...
+* Verifying proxy health ...
+* Opening http://127.0.0.1:51375/api/v1/namespaces/kubernetes-dashboard/services/http:kubernetes-dashboard:/proxy/ in your default browser...
+
+
+PS C:\WINDOWS\system32> helm search hub wordpress
+URL                                                     CHART VERSION   APP VERSION     DESCRIPTION                     
+https://hub.helm.sh/charts/bitnami/wordpress            8.1.3           5.3.2           Web publishing platform for building blogs and ...
+https://hub.helm.sh/charts/presslabs/wordpress-...      v0.8.2          v0.8.2          Presslabs WordPress Operator Helm Chart
+https://hub.helm.sh/charts/presslabs/wordpress-...      v0.7.5          v0.7.5          A Helm chart for deploying a WordPress site on ...
+PS C:\WINDOWS\system32> helm search repo brigade
+WARNING: Repo "bitnami" is corrupt or missing. Try 'helm repo update'.WARNING: Repo "nginx" is corrupt or missing. Try 'helm repo update'.WARNING: Repo "brigade" is corrupt or missing. Try 'helm repo update'.WARNING: Repo "stable" is corrupt or missing. Try 'helm repo update'.No results found
+PS C:\WINDOWS\system32> helm repo update
+Hang tight while we grab the latest from your chart repositories...
+...Successfully got an update from the "brigade" chart repository
+...Successfully got an update from the "nginx" chart repository
+...Successfully got an update from the "stable" chart repository
+...Successfully got an update from the "bitnami" chart repository
+Update Complete. ⎈ Happy Helming!⎈
+PS C:\WINDOWS\system32> helm search repo brigade
+NAME                            CHART VERSION   APP VERSION     DESCRIPTION
+brigade/brigade                 1.4.3           v1.2.1          Brigade provides event-driven scripting of Kube...
+brigade/brigade-github-app      0.6.0           v0.3.0          The Brigade GitHub App, an advanced gateway for...
+brigade/brigade-github-oauth    0.3.0           v0.20.0         The legacy OAuth GitHub Gateway for Brigade
+brigade/brigade-k8s-gateway     0.3.0                           A Helm chart for Kubernetes
+brigade/brigade-project         1.0.0           v1.0.0          Create a Brigade project
+brigade/kashti                  0.5.0           v0.4.0          A Helm chart for Kubernetes
+PS C:\WINDOWS\system32> helm search repo kash
+NAME            CHART VERSION   APP VERSION     DESCRIPTION
+brigade/kashti  0.5.0           v0.4.0          A Helm chart for Kubernetes
+PS C:\WINDOWS\system32>
