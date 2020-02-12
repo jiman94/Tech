@@ -729,3 +729,37 @@ tests:
     # resources: {}
 
 PS C:\WINDOWS\system32>
+
+
+
+PS Z:\aa> helm create deis-workflow
+Creating deis-workflow
+PS Z:\aa> helm package deis-workflow
+Successfully packaged chart and saved it to: Z:\aa\deis-workflow-0.1.0.tgz
+PS Z:\aa> helm install deis-workflow ./deis-workflow-0.1.0.tgz
+NAME: deis-workflow
+LAST DEPLOYED: Wed Feb 12 16:30:31 2020
+NAMESPACE: default
+STATUS: deployed
+REVISION: 1
+NOTES:
+1. Get the application URL by running these commands:
+  export POD_NAME=$(kubectl get pods --namespace default -l "app.kubernetes.io/name=deis-workflow,app.kubernetes.io/instance=deis-workflow" -o jsonpath="{.items[0].metadata.name}")
+  echo "Visit http://127.0.0.1:8080 to use your application"
+  kubectl --namespace default port-forward $POD_NAME 8080:80
+PS Z:\aa> helm list
+NAME                    NAMESPACE       REVISION        UPDATED                                 STATUS          CHART                   APP VERSION
+deis-workflow           default         1               2020-02-12 16:30:31.8667595 +0900 KST   deployed        deis-workflow-0.1.0     1.16.0
+happy-panda             default         1               2020-02-12 16:24:50.0232165 +0900 KST   deployed        mariadb-7.3.9           10.3.22
+mariadb-1581492518      default         1               2020-02-12 16:28:40.2758004 +0900 KST   deployed        mariadb-7.3.9           10.3.22
+PS Z:\aa> kubectl get pods
+NAME                             READY   STATUS    RESTARTS   AGE
+deis-workflow-56f8c8d689-4kn62   1/1     Running   0          51s
+happy-panda-mariadb-master-0     1/1     Running   0          6m33s
+happy-panda-mariadb-slave-0      1/1     Running   0          6m33s
+mariadb-1581492518-master-0      1/1     Running   0          2m42s
+mariadb-1581492518-slave-0       1/1     Running   0          2m42s
+PS Z:\aa> kubectl --namespace default port-forward deis-workflow-56f8c8d689-4kn62 8080:80
+Forwarding from 127.0.0.1:8080 -> 80
+Forwarding from [::1]:8080 -> 80
+Handling connection for 8080
