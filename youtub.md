@@ -151,3 +151,6 @@ https://www.youtube.com/watch?v=aAPtT4uaY1o&list=PL34sAs7_26wNBRWM6BDhnonoA5FMER
 
 #### 함수형 프로그래밍이 뭔가요?
 https://www.youtube.com/watch?v=jVG5jvOzu9Y
+
+#### GraphQL이 뭔가요?
+https://www.youtube.com/watch?v=EkWI6Ru8lFQ
