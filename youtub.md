@@ -154,3 +154,5 @@ https://www.youtube.com/watch?v=jVG5jvOzu9Y
 
 #### GraphQL이 뭔가요?
 https://www.youtube.com/watch?v=EkWI6Ru8lFQ
+
+https://www.graphql-java.com/tutorials/getting-started-with-spring-boot/
