@@ -148,3 +148,6 @@ https://www.youtube.com/watch?v=YzaYqxW0wGs&list=PL34sAs7_26wNBRWM6BDhnonoA5FMER
 
 https://www.youtube.com/watch?v=aAPtT4uaY1o&list=PL34sAs7_26wNBRWM6BDhnonoA5FMERax0&index=32
 
+
+#### 함수형 프로그래밍이 뭔가요?
+https://www.youtube.com/watch?v=jVG5jvOzu9Y
