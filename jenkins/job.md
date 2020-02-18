@@ -1,3 +1,4 @@
+```bash 
 def jobs = [
     "SubStageA",
     "SubStageB",
@@ -60,6 +61,7 @@ pipeline {
                     if(params.target_repo == 'all') {
                          //parallelStagesMap
                           echo "Hello ${params.target_repo}"
+                          parallelStagesMap.failFast = true
                         parallel parallelStagesMap
                     }
                 }
@@ -67,3 +69,7 @@ pipeline {
         }
     }
 }
+```
+### 참조 
+https://gist.github.com/sheeeng/8d9274ccd9f9d6370feba6f5888f5dee
+
