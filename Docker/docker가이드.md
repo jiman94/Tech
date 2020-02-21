@@ -384,6 +384,14 @@ docker-compose up -d
 ```bash 
 docker-compose down
 ```
+
+#### 6. docker-compose로 실행된 컨테이너 로그 확인 
+
+```bash 
+docker logs -f $(docker ps -f name=[컨테이너이름] -q)
+docker-compose logs -f [서비스이름]
+```
+
 ---
 
 #### 컨테이너간 포트 공유 ( wordpress 가 mysql DB 접속 ) 
