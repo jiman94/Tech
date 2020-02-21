@@ -5,6 +5,9 @@ https://github.com/kamranahmedse/developer-roadmap
 https://poiemaweb.com/
 
 
+#### AWS 네트워크 서비스 소개 및 사용 방법 - 김기현, AWS 솔루션즈 아키텍트
+https://www.slideshare.net/awskorea/aws-builders-aws-aws
+
 
 #### Istio를 사용하여 마이크로 서비스에 대한 고급 트래픽 관리 및 요청 추적 기능 적용하기
 https://developer.ibm.com/kr/journey/manage-microservices-traffic-using-istio/
