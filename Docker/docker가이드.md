@@ -1,52 +1,85 @@
+# Docker 사용 가이드 
+
 ### Install
-
 #### Mac
-$ brew cask install docker
-$ open /Applications/Docker.app
 
-
+```bash 
+brew cask install docker
+open /Applications/Docker.app
+```
 
 ### help
-$ docker image --help
-$ docker container --help
+
+```bash 
+docker image --help
+docker container --help
+```
 
 ### search
-$ docker search nginx
-$ docker search nginx --limit 10
 
+```bash 
+docker search nginx
+docker search nginx --limit 10
+```
 ### image
 
-####  이미지 빌드
-$ docker image build -t IMAGE     Dockerfile경로
-$ docker image build -t IMAGE:TAG Dockerfile경로
+#### 이미지 빌드
 
+```bash 
+docker image build -t IMAGE     Dockerfile경로
+docker image build -t IMAGE:TAG Dockerfile경로
+```
 #### 이미지 목록 보기
-$ docker image ls
 
+```bash 
+docker image ls
+```
 #### 이미지 다운로드
-$ docker image pull IMAGE:TAG
+
+```bash 
+docker image pull IMAGE:TAG
+```
 
 #### 이미지 태그 설정
-$ docker image tag TARGET_IMAGE:TAG  NEW_IMAGE:TAG
 
+```bash 
+docker image tag TARGET_IMAGE:TAG  NEW_IMAGE:TAG
+```
 #### 이미지 삭제
-$ docker image rm IMAGE:TAG
-$ docker image prune        # 실행중이 아닌 모든 컨테이너 삭제
 
-container
+```bash 
+docker image rm IMAGE:TAG
+
+// 실행중이 아닌 모든 컨테이너 삭제
+docker image prune  
+```
 
 #### 컨테이너 목록 보기
-$ docker container ls
-$ docker container ls -q    # 컨테이너 ID만 출력
-$ docker container ls -a    # 종료된 컨테이너 목록
 
-#### 컨테이너를 실행하는 여러 방법들
+```bash
+docker container ls
 
-$ docker container run -it IMAGE:TAG
-$ docker container run -d -t IMAGE:TAG
-$ docker container run -it -p HOST_PORT:CONTAINER_PORT  IMAGE:TAG
-$ docker container run -it --name my_container  IMAGE:TAG
-$ docker container run --rm IMAGE
+// 컨테이너 ID만 출력
+docker container ls -q    
+
+// 종료된 컨테이너 목록
+docker container ls -a   
+```
+
+#### 컨테이너를 실행 방법
+
+```bash 
+docker container run -it IMAGE:TAG
+
+docker container run -d -t IMAGE:TAG
+
+docker container run -it -p HOST_PORT:CONTAINER_PORT  IMAGE:TAG
+
+docker container run -it --name my_container  IMAGE:TAG
+
+docker container run --rm IMAGE
+```
+#### 컨테이너 실행시 옵셥 정리 
 
 ```bash 
 -d: 백그라운드로(데몬) 실행.
@@ -58,81 +91,126 @@ $ docker container run --rm IMAGE
 --rm: 구동이 끝난 후 컨테이너를 삭제한다.
 ```
 
-#### 컨테이너 정지
-$ docker container stop CONTAINER_ID
-$ docker container stop CONTAINER_NAME
+#### 컨테이너 
+
+```bash
+docker container stop CONTAINER_ID
+
+docker container stop CONTAINER_NAME
+```
 
 #### 컨테이너 재시작
-$ docker container restart CONTAINER_ID
-$ docker container restart CONTAINER_NAME
 
+```bash
+docker container restart CONTAINER_ID
+
+docker container restart CONTAINER_NAME
+```
 #### 컨테이너 삭제
-$ docker container rm CONTAINER_ID
-$ docker container rm CONTAINER_NAME
-$ docker container rm -f CONTAINER_NAME
-$ docker container prune                # 실행중이 아닌 모든 컨테이너 삭제
+
+```bash
+docker container rm CONTAINER_ID
+docker container rm CONTAINER_NAME
+docker container rm -f CONTAINER_NAME
+
+// 실행중이 아닌 모든 컨테이너 삭제
+docker container prune               
+```
 
 #### 컨테이너 표준 출력 보기
-$ docker container logs CONTAINER_ID
-$ docker container logs -f CONTAINER_ID  # tail -f 처럼 보여준다
+
+```bash
+docker container logs CONTAINER_ID
+docker container logs -f CONTAINER_ID  # tail -f 처럼 보여준다
+```
 
 #### 실행중인 컨테이너에서 명령 실행
-$ docker container exec CONTAINER_ID  COMMAND
+
+```bash
+docker container exec CONTAINER_ID  COMMAND
+```
 
 #### 시스템 리소스 사용 상태 보기
-$ docker container stats
 
-- helloworld 출력해 보기
-- helloworld라는 이름의 간단한 셸 스크립트를 작성한다.
+```bash 
+docker container stats
+```
 
+---
+
+### 테스트 시나리오 
+#### 1. helloworld 이름으로 스크립트 작성 
+
+```bash 
 #! /bin/sh
-
 echo Hello, World!
-이제 helloworld를 실행할 환경을 정의하자. 
-Dockerfile을 작성
+```
+#### 2. Dockerfile 이름으로 스크립트 작성
 
+```bash
 FROM ubuntu:latest
-
 COPY helloworld /usr/local/bin
 RUN chmod +x /usr/local/bin/helloworld
-
 CMD ["helloworld"]
+```
 
+#### 3. 이미지 빌드 하기 
 
-이미지를 빌드한다.
+```bash 
+docker image build -t helloworld:latest .
+```
 
-$ docker image build -t helloworld:latest .
-컨테이너를 실행해 보자. Hello, World! 문자열이 출력되면 성공이다.
+#### 4. 컨테이너를 실행 하기 
 
-$ docker container run helloworld
+```bash 
+docker container run helloworld
+```
+
 Hello, World!
 
-이미지 목록을 확인해 보자.
+#### 5. 이미지 목록을 확인 하기 
+- 문자열 하나 출력 하는데 SIZE가 69.9MB , alpine 사용해 사이즈를 줄여 보자 ! 
 
-$ docker image ls
+```bash 
+docker image ls
 REPOSITORY              TAG                 IMAGE ID            CREATED             SIZE
 helloworld              latest              584cf23a6604        8 minutes ago       69.9MB
+```
 
-그냥 문자열 출력만 하는데 SIZE가 69.9MB나 된다.
+#### 6. OS별 사이즈 ( ubuntu => alpine )
+- 이미지 목록을 확인해 보면 용량이 줄어 있다 ( 5.53MB ) 
 
-그렇다면 Dockerfile을 수정하여 FROM 값을 용량이 작은 alpine으로 바꿔보자.
+```bash
 
-# ubuntu => alpine
 FROM alpine:latest
-
 COPY helloworld /usr/local/bin
 RUN chmod +x /usr/local/bin/helloworld
-
 CMD ["helloworld"]
-이미지 목록을 확인해 보면 용량이 5.53MB로 줄어 있다.
 
-$ docker image ls
+```
+
+```bash
+docker image build -t helloworld:latest .
+```
+
+```bash
+docker container run helloworld
+```
+
+```output
+Hello, World!
+```
+
+```bash 
+docker image ls
 REPOSITORY              TAG                 IMAGE ID            CREATED             SIZE
 helloworld              latest              a9a80e4487ea        6 minutes ago       5.53MB
+```
 
-간단한 go 웹 서버 띄워보기
-다음과 같은 main.go파일을 작성하자.
 
+### 간단한 go 웹 서버 띄워보기
+#### 1. main.go 파일 작성
+```bash 
 package main // import "github.com/johngrib/go-http-helloworld"
 
 import (
@@ -161,69 +239,110 @@ func main() {
         log.Println(err)
     }
 }
+```
 
-그리고 다음과 같이 Dockerfile도 작성해 준다.
+####  2. Dockerfile 작성 
 
+```bash 
 FROM golang:1.12
-
 RUN mkdir /hello
 COPY main.go /hello
 CMD ["go", "run", "/hello/main.go"]
-그리고 다음 명령어를 실행해주면 컨테이너 환경에서 서버가 실행된다.
+```
 
-#### 이미지 빌드
-$ docker build -t hello:latest .
+####  3. 이미지 빌드
 
-#### 컨테이너 실행
+```bash
+docker build -t hello:latest .
+```
 
-$ docker container run -t -p 8080:3000 hello:latest
+####  4. 컨테이너 실행
 
+```bash
+docker container run -t -p 8080:3000 hello:latest
+```
+####  5. 컨테이너 실행 옵션 
+
+```bash 
 -p: 포트 지정. 포트는 호스트:컨테이너 형식으로 지정한다.
 예: -p 8080:3000은 컨테이너의 3000 포트를 호스트의 8080 포트로 연결하는 것.
-실행되면 다음과 같이 요청을 보낼 수 있다.
+```
 
-curl http://localhost:8080을 입력하면 Hello World가 출력된다.
-curl http://localhost:8080/ping을 입력하면 pong이 출력된다.
-한편 docker container ls 명령으로 실행중인 컨테이너 목록을 확인할 수 있다.
+####  6. curl 호출 
 
-$ docker container ls
+```bash 
+curl http://localhost:8080
+curl http://localhost:8080/ping
+```
+#### 7. 실행중인 컨테이너 목록 확인
+
+```bash 
+docker container ls
 CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                      NAMES
 1111        hello:latest        "go run /hello/main.…"   6 minutes ago       Up 6 minutes        0.0.0.0:8080->3000/tcp     keen_driscoll
-다음 명령으로 실행중인 컨테이너를 종료할 수 있다.
+```
 
-$ docker container stop 1111
-다음과 같이 해도 된다.
+#### 8. 실행중인 컨테이너 종료
 
-$ docker container stop 1111
-만약 실행할 때 도커 컨테이너가 포어그라운드를 차지하는 것이 싫다면 -d 옵션을 주면 된다. 데몬으로 실행한다.
+```bash 
+docker container stop 1111
+```
 
-$ docker run -d -t -p 8080:3000 hello
-docker-compose
-docker-compose를 사용하면
-docker 명령에 옵션을 주렁주렁 붙이는 일을 yml로 편하게 할 수 있다.
-여러 컨테이너의 실행을 yml 파일로 정의할 수 있어 편리하다.
-위에서 만든 go 웹 서버 디렉토리로 가서 다음과 같은 docker-compose.yml 파일을 작성하자.
+#### 9. 데몬으로 컨테이너 실행 
 
+```bash
+docker run -d -t -p 8080:3000 hello
+```
+
+
+### docker-compose 사용  
+
+- docker 명령을  옵션을 주렁주렁 붙이는 일을 yml로 편하게 할 수 있다.
+- 여러 컨테이너의 실행을 yml 파일로 정의할 수 있어 편리하다.
+
+#### 1. docker-compose.yml 파일 작성 
+
+```bash 
 version: "3.7"
 services:
   go-helloworld:
     image: helloworld:latest
     ports:
       - 8080:3000
-그 다음 다음과 같이 up을 실행하면 컨테이너가 뜬다.
+```
 
-$ docker-compose up
-$ docker-compose up -d
-$ docker-compose up --build
+#### 2. docker-compose 옵션 
+
+```bash 
 -d: 데몬으로 실행
 --build: 빌드한 다음 실행
+```
 
-컨테이너를 정지하려면 down 옵션을 주면 된다.
+#### 3. docker-compose 빌드후 실행 하기 
 
-$ docker-compose down
+```bash 
+docker-compose up --build
+```
+
+#### 4. docker-compose 실행 하기 
+
+```bash 
+docker-compose up
+docker-compose up -d
+```
 
 
-```yml 
+#### 5. docker-compose로 실행된 컨테이너 정지 하기 
+
+```bash 
+docker-compose down
+```
+---
+
+#### 컨테이너간 포트 공유 ( wordpress 가 mysql DB 접속 ) 
+
+```yaml
+
 docker run -d \
   -e MYSQL_ALLOW_EMPTY_PASSWORD=true \
   --name mysql \
