@@ -15,6 +15,9 @@ https://developer.ibm.com/kr/journey/manage-microservices-traffic-using-istio/
 #### 대규모 Kubernetes 클러스터 구축기
 https://engineering.linecorp.com/ko/blog/building-large-kubernetes-cluster/
 
+#### 리엑트 네이티브 기본강좌
+https://www.youtube.com/watch?v=wxaCOleAumk&list=PL60Uti4nULBN7EQYmgjksXJXnkufo0m-9&index=2
+
 #### 성능 테스트 자동화하기
 
 
