@@ -136,6 +136,53 @@ docker container exec CONTAINER_ID  COMMAND
 docker container stats
 ```
 
+#### 컨테이너에 접속하기
+```bash 
+docker run -i -t --name ubuntu01 ubuntu /bin/bash
+
+docker attach ubuntu01
+```
+
+#### 컨테이너 중지하기
+```bash 
+docker stop 5555b7dd1385
+```
+
+#### 모든 컨테이너 중지하기
+```bash 
+docker stop $(docker ps -a -q)
+```
+
+#### 컨테이너 재부팅하기
+```bash 
+docker restart 5555b7dd1385
+```
+
+#### ps 명령어로 확인해보기
+```bash 
+docker ps
+```
+
+#### 컨테이너 확인하기 (-a 옵션으로 종료된 컨테이너까지 확인하기)
+```bash 
+docker ps -a
+```
+
+#### 컨테이너 삭제하기
+```bash 
+docker rm 479266e88816
+```
+
+#### 모든 컨테이너 삭제
+```bash 
+docker rm $(docker ps -a -q)
+```
+
+#### 모든 이미지 삭제하기
+```bash 
+docker rmi $(docker images -q)
+```
+
 ---
 
 ### 테스트 시나리오 
