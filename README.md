@@ -4,6 +4,9 @@ https://github.com/kamranahmedse/developer-roadmap
 #### jquery 
 https://poiemaweb.com/
 
+#### Flutter 입문. 안드로이드와 iOS개발을 한 번에
+https://www.youtube.com/watch?v=lRbZsBvG9Ig&list=PLxTmPHxRH3VUueVvEnrP8qxHAP5x9XAPv&index=2&t=0s
+
 
 #### AWS 네트워크 서비스 소개 및 사용 방법 - 김기현, AWS 솔루션즈 아키텍트
 https://www.slideshare.net/awskorea/aws-builders-aws-aws
