@@ -13,6 +13,9 @@ https://developer.android.com/studio
 #### vscode 
 https://code.visualstudio.com/
 
+#### AWS 자료 
+https://velog.io/@minholee_93?tag=aws
+
 
 #### AWS 네트워크 서비스 소개 및 사용 방법 - 김기현, AWS 솔루션즈 아키텍트
 https://www.slideshare.net/awskorea/aws-builders-aws-aws
