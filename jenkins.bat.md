@@ -1,3 +1,4 @@
+```bash 
 rem java -jar D:/Project/tools/jenkins/jenkins.war --httpPort=8080
 rem # nohup java –jar /data/jenkins.war  --httpPort= 8089 --prefix=/sonarqube > /data/jenkins/app/logs/sonarqube/jenkins.log 2>&1 &
 
@@ -49,3 +50,4 @@ set JAVA_OPTS=%JAVA_OPTS% -XX:+HeapDumpOnOutOfMemoryError
 set JAVA_OPTS=%JAVA_OPTS% -XX:HeapDumpPath=D:/
 
 %JAVA_HOME%/bin/java -jar "%JENKINS_BASE%/jenkins-%JENKINS_VERSION%.war" %JENKINS_OPTS%
+```
