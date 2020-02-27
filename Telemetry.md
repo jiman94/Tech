@@ -15,18 +15,7 @@ docker exec -it zipkin /bin/sh
 
 ---
 ```bash 
-D:\>docker run -d -p 9090:9090 -v /home/ec2-user/apps/prometheus:/etc/prometheus --name prometheus prom/prometheus:latest
-Unable to find image 'prom/prometheus:latest' locally
-latest: Pulling from prom/prometheus
 
-
-D:\>docker run -d --name=grafana -p 3000:3000 --name grafana grafana/grafana:latest
-Unable to find image 'grafana/grafana:latest' locally
-latest: Pulling from grafana/grafana
-
-D:\>docker run -d -p 9411:9411 --name zipkin openzipkin/zipkin:latest
-Unable to find image 'openzipkin/zipkin:latest' locally
-latest: Pulling from openzipkin/zipkin
 D:\>docker ps -a
 CONTAINER ID        IMAGE                      COMMAND                  CREATED              STATUS                          PORTS                              NAMES
 
