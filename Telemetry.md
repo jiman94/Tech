@@ -14,7 +14,7 @@ docker run -d -p 9411:9411 --name zipkin openzipkin/zipkin:latest
 docker exec -it zipkin /bin/sh
 
 ---
-
+```bash 
 D:\>docker run -d -p 9090:9090 -v /home/ec2-user/apps/prometheus:/etc/prometheus --name prometheus prom/prometheus:latest
 Unable to find image 'prom/prometheus:latest' locally
 latest: Pulling from prom/prometheus
@@ -37,5 +37,5 @@ CONTAINER ID        IMAGE                      COMMAND                  CREATED 
 69fc533d15ea        prom/prometheus:latest     "/bin/prometheus --c…"   About a minute ago   Exited (1) About a minute ago                                      prometheus
 
 D:\>
-
+```
 
