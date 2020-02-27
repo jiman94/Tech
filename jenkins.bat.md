@@ -1,16 +1,20 @@
+
+https://jenkins.io/download/
+
 ```bash 
+
 rem java -jar D:/Project/tools/jenkins/jenkins.war --httpPort=8080
 rem # nohup java –jar /data/jenkins.war  --httpPort= 8089 --prefix=/sonarqube > /data/jenkins/app/logs/sonarqube/jenkins.log 2>&1 &
 
 set MODULE_NAME=dev
-set JAVA_HOME=D:/Project/Java/jdk1.8.0_231
+set JAVA_HOME=Z:/Project/Java/jdk1.8.0_241
 
-set JENKINS_BASE=D:/Project/CI
-set JENKINS_HOME=D:/Project/CI/%MODULE_NAME%
+set JENKINS_BASE=Z:/Project/CI
+set JENKINS_HOME=Z:/Project/CI/%MODULE_NAME%
 
 set JENKINS_LOG=%JENKINS_BASE%/logs/%MODULE_NAME%
 set JENKINS_HTTP_PORT=8090
-set JENKINS_VERSION=2.210
+set JENKINS_VERSION=2.204.2
 
 set JENKINS_OPTS=--prefix=%JENKINS_PREFIX%
 set JENKINS_OPTS=%JENKINS_OPTS% --httpPort=%JENKINS_HTTP_PORT%
@@ -50,4 +54,5 @@ set JAVA_OPTS=%JAVA_OPTS% -XX:+HeapDumpOnOutOfMemoryError
 set JAVA_OPTS=%JAVA_OPTS% -XX:HeapDumpPath=D:/
 
 %JAVA_HOME%/bin/java -jar "%JENKINS_BASE%/jenkins-%JENKINS_VERSION%.war" %JENKINS_OPTS%
+
 ```
