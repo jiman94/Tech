@@ -51,7 +51,7 @@ set JAVA_OPTS=%JAVA_OPTS% -XX:+PrintGCDetails
 set JAVA_OPTS=%JAVA_OPTS% -XX:+PrintGCTimeStamps
 set JAVA_OPTS=%JAVA_OPTS% -XX:+PrintHeapAtGC
 set JAVA_OPTS=%JAVA_OPTS% -XX:+HeapDumpOnOutOfMemoryError
-set JAVA_OPTS=%JAVA_OPTS% -XX:HeapDumpPath=D:/
+set JAVA_OPTS=%JAVA_OPTS% -XX:HeapDumpPath=Z:/
 
 %JAVA_HOME%/bin/java -jar "%JENKINS_BASE%/jenkins-%JENKINS_VERSION%.war" %JENKINS_OPTS%
 
