@@ -2,6 +2,17 @@
 https://jenkins.io/download/
 
 ```bash 
+~/.aws/credentials
+[default] 
+aws_access_key_id=AKIAIOSFODNN7EXAMPLE aws_secret_access_key=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+
+~/.aws/config
+[default] 
+region=ap-northeast-2 
+output=json
+```
+
+```bash 
 
 rem java -jar D:/Project/tools/jenkins/jenkins.war --httpPort=8080
 rem # nohup java –jar /data/jenkins.war  --httpPort= 8089 --prefix=/sonarqube > /data/jenkins/app/logs/sonarqube/jenkins.log 2>&1 &
