@@ -1,3 +1,13 @@
+touch README.md
+
+git add .
+
+git commit -m "add README"
+
+git push -u origin master
+
+
+
 
 git remote 
 git remote show origin
