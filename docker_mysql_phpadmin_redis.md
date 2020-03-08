@@ -56,5 +56,7 @@ networks:
     mysqlnetwork:
       driver: bridge
 
-
+#### 참조 
 https://github.com/tegansnyder/docker-mysql-master-slave
+
+https://github.com/TomCzHen/mysql-replication-sample
