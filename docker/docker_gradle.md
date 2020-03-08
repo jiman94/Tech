@@ -1,5 +1,5 @@
 #### Build a simple Spring Boot app with Docker¶
-
+```bash
 $ sudo add-apt-repository ppa:webupd8team/java
 $ sudo apt-get update
 $ sudo apt-get install oracle-java8-installer
@@ -10,7 +10,7 @@ Java HotSpot(TM) 64-Bit Server VM (build 25.45-b02, mixed mode)
 
 $ sudo apt-get install gradle
 $ sudo apt-get install maven
-
+```
 #### Setup a Spring Boot App
 
 $git clone https://github.com/spring-guides/gs-spring-boot-docker.git
