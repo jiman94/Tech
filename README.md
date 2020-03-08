@@ -35,6 +35,9 @@ https://www.youtube.com/watch?v=wxaCOleAumk&list=PL60Uti4nULBN7EQYmgjksXJXnkufo0
 
 #### docker
 
+#### MySQL master slave using docker 
+https://github.com/tegansnyder/docker-mysql-master-slave
+
 #### LINE Engineering
 https://engineering.linecorp.com/ko/opensource/
 
