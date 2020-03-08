@@ -55,3 +55,6 @@ volumes:
 networks:
     mysqlnetwork:
       driver: bridge
+
+
+https://github.com/tegansnyder/docker-mysql-master-slave
