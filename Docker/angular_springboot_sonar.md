@@ -17,54 +17,65 @@ npm start
 ```
 
 ### Managing dependencies
+```bash 
 
-    npm install --save --save-exact leaflet
-    npm install --save-dev --save-exact @types/leaflet
+npm install --save --save-exact leaflet
+npm install --save-dev --save-exact @types/leaflet
 
-   import 'leaflet/dist/leaflet.js';
+import 'leaflet/dist/leaflet.js';
 
-  @import '~leaflet/dist/leaflet.css';
-
+@import '~leaflet/dist/leaflet.css';
+```
 ### Using Angular CLI
 
-    ng generate component my-component
+```bash 
+ng generate component my-component
 
-    create src/main/webapp/app/my-component/my-component.component.html
-    create src/main/webapp/app/my-component/my-component.component.ts
-    update src/main/webapp/app/app.module.ts
+create src/main/webapp/app/my-component/my-component.component.html
+create src/main/webapp/app/my-component/my-component.component.ts
+update src/main/webapp/app/app.module.ts
 
-    ./mvnw -Pprod clean verify
+./mvnw -Pprod clean verify
 
-    java -jar target/*.jar
+java -jar target/*.jar
 
-    ./mvnw -Pprod,war clean verify
+./mvnw -Pprod,war clean verify
 
-    ./mvnw verify
+./mvnw verify
+```    
 
+```bash 
 docker-compose -f src/main/docker/sonar.yml up -d
+```
 
+```bash 
 D:\git\jhipster-sample-app>docker ps -a
 CONTAINER ID        IMAGE                            COMMAND                  CREATED             STATUS                    PORTS                                            NAMES
 f007df5fd1c1        sonarqube:7.9.1-community        "./bin/run.sh"           30 minutes ago      Up 10 seconds             0.0.0.0:9092->9092/tcp, 0.0.0.0:9001->9000/tcp   docker_jhips
 
 -Pprod clean verify sonar:sonar -Dsonar.host.url=http://localhost:9001
  admin/admin
+```
 
-    docker-compose -f src/main/docker/mysql.yml up -d
+```bash 
 
-    docker-compose -f src/main/docker/mysql.yml down
+docker-compose -f src/main/docker/mysql.yml up -d
 
-    ./mvnw -Pprod verify jib:dockerBuild
+docker-compose -f src/main/docker/mysql.yml down
 
-    docker-compose -f src/main/docker/app.yml up -d
+./mvnw -Pprod verify jib:dockerBuild
+
+docker-compose -f src/main/docker/app.yml up -d
+```
 
 
-
-
+```bash
 D:\git\jhipster-sample-app>nuc -u
 'nuc'은(는) 내부 또는 외부 명령, 실행할 수 있는 프로그램, 또는
 배치 파일이 아닙니다.
+```
 
+```bash 
 D:\git\jhipster-sample-app>ncu -u
 Upgrading D:\git\jhipster-sample-app\package.json
 [====================] 96/96 100%
@@ -112,3 +123,4 @@ Upgrading D:\git\jhipster-sample-app\package.json
  workbox-webpack-plugin                          4.3.1  →         5.0.0
 
 Run npm install to install new versions.
+```
