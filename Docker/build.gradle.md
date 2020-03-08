@@ -1,3 +1,4 @@
+```bash 
 buildscript {
     repositories {
         mavenCentral()
@@ -53,3 +54,5 @@ task buildDocker (type:Docker, dependsOn: build) {
 		}
 	}
 }
+
+```
