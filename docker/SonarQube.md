@@ -1,4 +1,4 @@
-1. docker ps 실행 시 아래 오류 발생하면,
+#### 1. docker ps 실행 시 아래 오류 발생하면,
 
 unix:///var/run/docker.sock. Is the docker daemon running?
 
