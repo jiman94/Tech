@@ -3,11 +3,12 @@
 unix:///var/run/docker.sock. Is the docker daemon running?
 
 위와 같은 명령어가 뜨면 docker service가 실행이 안되어 있는 것이다.
- 
+
+```bash 
 $sudo systemctl status docker
 $sudo systemctl start docker
 $sudo systemctl enable docker
-
+```
 
 #### SonarSource
 https://github.com/SonarSource/docker-sonarqube
