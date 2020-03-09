@@ -1,23 +1,22 @@
 
-1. Jenkins 설치
+#### 1. Jenkins 설치
 
 https://github.com/jenkinsci/docker
 
 https://jenkins.io/download/
 
 
-2. pilot-jenkins  빌드 
+#### 2. pilot-jenkins  빌드 
 
 docker build --build-arg JENKINS_VERSION=2.204.5 -t pilot-jenkins .
 
 
 #### Mac
-docker run -d -p 8080:8080 -p 50000:50000 -v /Users/mz02-jmryu/Downloads/jenkins:/var/jenkins_home -v /var/run/docker.sock:/var/run/docker.sock --restart unless-stopped --name pilot-jenkins pilot-jenkins:latest
+docker run -d -p 8080:8080 -p 50000:50000 -v /Users/jmryu/Downloads/jenkins:/var/jenkins_home -v /var/run/docker.sock:/var/run/docker.sock --restart unless-stopped --name pilot-jenkins pilot-jenkins:latest
 
 
----
 
-3. docker ps 실행 시 아래 오류 발생하면,
+#### 3. docker ps 실행 시 아래 오류 발생하면,
 
 unix:///var/run/docker.sock. Is the docker daemon running?
 
