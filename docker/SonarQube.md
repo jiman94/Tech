@@ -22,15 +22,15 @@ docker build -t chicor-sonarqube .
 
 #### Dockerfile 실행 
 
-docker run -d -p 9000:9000 --name chicor-sonarqube chicor-sonarqube:latest
+docker run -d -p 9000:9000 --name pilot-sonarqube pilot-sonarqube:latest
 
 #### inspect 실행 
 
-docker inspect chicor-sonarqube 
+docker inspect pilot-sonarqube 
 
 #### exec -it 실행 
 
-docker exec -it  chicor-sonarqube  /bin/bash
+docker exec -it  pilot-sonarqube  /bin/bash
 
 
 
