@@ -1,3 +1,4 @@
+```bash 
 version: '3'
 
 services:
@@ -51,3 +52,4 @@ services:
 networks:
     mysqlnetwork:
       driver: bridge
+```      
