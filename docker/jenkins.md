@@ -6,7 +6,7 @@ https://github.com/jenkinsci/docker
 https://jenkins.io/download/
 
 
-2. chicor-jenkins  빌드 
+2. pilot-jenkins  빌드 
 
 docker build --build-arg JENKINS_VERSION=2.204.5 -t pilot-jenkins .
 
