@@ -18,7 +18,7 @@ docker run --volume=/:/rootfs:ro --volume=/var/run:/var/run:ro --volume=/sys:/sy
 
 docker run --volume=/:/rootfs:ro --volume=/var/run:/var/run:ro --volume=/sys:/sys:ro --volume=/var/lib/docker/:/var/lib/docker:ro   --volume=/dev/disk/:/dev/disk:ro   --publish=8082:8082   --detach=true   --name=pilot-cadvisor   gcr.io/google-containers/cadvisor:latest
 
-docker run -d --net="host" --pid="host" -v "/:/host:ro,rslave"   quay.io/prometheus/node-exporter --path.rootfs=/host --name chicor-node-exporter
+docker run -d --net="host" --pid="host" -v "/:/host:ro,rslave"   quay.io/prometheus/node-exporter --path.rootfs=/host --name pilot-node-exporter
 
 docker run -p 9100:9100 -v "/proc:/host/proc" -v "/sys:/host/sys" -v "/:/rootfs" --net="host" prom/node-exporter --path.procfs /host/proc --path.sysfs /host/proc --collector.filesystem.ignored-mount-points "^/(sys|proc|dev|host|etc)($|/)"
 
