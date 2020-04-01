@@ -9,3 +9,6 @@ https://www.vagrantup.com/downloads.html
 
 
 https://github.com/jiman94/kubernetes-cluster
+
+
+https://kubernetes.io/blog/2019/03/15/kubernetes-setup-using-ansible-and-vagrant/
