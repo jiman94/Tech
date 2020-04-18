@@ -1,4 +1,7 @@
 
+docker build -t pilot_dev_config_server .
+docker run --name pilot_dev_config_server -p 8888:8888 -d pilot_dev_config_server
+
 
 #! /bin/bash
 docker run --name pilot-mobile -p 8011:80 -v /home/ec2-user/pilot/publishing/mf:/usr/share/nginx/html -d nginx
