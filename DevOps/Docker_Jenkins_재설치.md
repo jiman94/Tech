@@ -37,17 +37,18 @@ docker pull jenkins/jenkins:lts
 docker run -d -p 8080:8080 -p 50000:50000 -v /Users/mz02-jmryu/Downloads/jenkins:/var/jenkins_home -v /var/run/docker.sock:/var/run/docker.sock --restart unless-stopped --name pilot-jenkins jenkins/jenkins:lts
 
 Stg
-docker build --build-arg JENKINS_VERSION=2.190.2 -t chicor-jenkins .
-docker run -d -p 8080:8080 -p 50000:50000  -v /home/ec2-user/apps/jenkins:/var/jenkins_home -v /var/run/docker.sock:/var/run/docker.sock --restart unless-stopped  --name chicor-jenkins chicor-jenkins:latest
+docker build --build-arg JENKINS_VERSION=2.190.2 -t pilot-jenkins .
+
+docker run -d -p 8080:8080 -p 50000:50000  -v /home/ec2-user/apps/jenkins:/var/jenkins_home -v /var/run/docker.sock:/var/run/docker.sock --restart unless-stopped  --name pilot-jenkins chicor-jenkins:latest
 
 Prod 
 
-docker run -d -p 8080:8080 -p 50000:50000  -v /app/jenkins:/var/jenkins_home -v /var/run/docker.sock:/var/run/docker.sock --restart unless-stopped  --name chicor-jenkins chicor-jenkins:latest
+docker run -d -p 8080:8080 -p 50000:50000  -v /app/jenkins:/var/jenkins_home -v /var/run/docker.sock:/var/run/docker.sock --restart unless-stopped  --name pilot-jenkins pilot-jenkins:latest
 
 4. Sonarqube 설치 
 
 docker pull sonarqube
 
-docker run -d -p 9000:9000 --name chicor-sonarqube sonarqube
+docker run -d -p 9000:9000 --name pilote-sonarqube sonarqube
 
 
