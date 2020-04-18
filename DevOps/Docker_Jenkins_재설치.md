@@ -16,6 +16,20 @@ yum install -y docker
 
 chmod 777 /var/run/docker.sock
 
+docker info
+
+sudo systemctl start docker
+sudo systemctl enable docker
+
+sudo yum update -y
+sudo amazon-linux-extras install docker
+sudo service docker start
+sudo usermod -a -G docker ec2-user
+docker info
+sudo yum update -y
+sudo yum install git
+
+
 3. Jenkins 설치 
 
 docker pull jenkins/jenkins:lts
@@ -35,3 +49,5 @@ docker run -d -p 8080:8080 -p 50000:50000  -v /app/jenkins:/var/jenkins_home -v 
 docker pull sonarqube
 
 docker run -d -p 9000:9000 --name chicor-sonarqube sonarqube
+
+
