@@ -52,3 +52,19 @@ docker pull sonarqube
 docker run -d -p 9000:9000 --name pilote-sonarqube sonarqube
 
 
+
+5. 시간 
+sudo ln -sf /usr/share/zoneinfo/Asia/Seoul /etc/localtime
+
+-v /etc/localtime:/etc/localtime:ro \
+-e TZ=Asia/Seoul \
+
+docker rm e826a567aba1
+
+docker run -d -p 8080:8080 -p 50000:50000  -v /app/jenkins:/var/jenkins_home -v /var/run/docker.sock:/var/run/docker.sock -v /etc/localtime:/etc/localtime:ro -e TZ=Asia/Seoul --restart unless-stopped  --name chicor-jenkins chicor-jenkins:latest
+
+docker exec -u root -it 35bd73bfe189 /bin/bash
+
+date
+
+
