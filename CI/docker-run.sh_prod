@@ -1,0 +1,5 @@
+#! /bin/bash
+
+docker build -t pilot_dev_api_system .
+
+docker run --name pilot_dev_api_system -p 8090:8090 -d pilot_dev_api_system
