@@ -1,0 +1,7 @@
+#!/bin/bash
+
+java -Dspring.profiles.active=$profile \
+     -Dspring.cloud.config.uri=$configServer \
+     -Dserver.port=$port \
+     -Xms536m -Xmx2048m \
+     -jar pilot_dev_api_system.jar
