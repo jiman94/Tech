@@ -1,0 +1,47 @@
+FROM openjdk:8-jdk-stretch
+
+RUN apt-get update && apt-get upgrade -y && apt-get install -y vim && apt-get install traceroute
+
+USER root
+LABEL maintainer="pilot"
+
+ENV TZ=Asia/Seoul
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+RUN useradd jenkins -d /app/jenkins -s /bin/bash
+RUN chown -R jenkins:jenkins /app/jenkins/
+RUN chmod -R 755 /app/jenkins/
+  
+USER root
+RUN useradd docker
+
+ENV profile prod 
+ENV configServer 'http://config.prod.pilot.com'
+ENV port 80
+
+EXPOSE $port
+
+CMD java -Dspring.profiles.active=$profile \
+         -Dspring.cloud.config.uri=$configServer \
+         -Dserver.port=$port \
+    -jar pilot_dev_api_system.jar 
+
+COPY ./pilot_dev_api_system.jar .
+
+ENV LD_LIBRARY_PATH=/app/jenkins/lib
+ENV CLASSPATH=.://app/jenkins/lib/API.jar
+ENV COHOME=/app/jenkins/lib
+ENV COPORT=1234
+
+USER root
+COPY cubeone_start.sh /cubeone_start.sh
+COPY spring_start.sh /spring_start.sh
+COPY start.sh /start.sh
+
+RUN chown jenkins:jenkins /jenkins_start.sh
+RUN chown jenkins:jenkins /spring_start.sh
+RUN chown jenkins:jenkins /start.sh
+RUN chown jenkins:jenkins /pilot_dev_api_system.jar
+
+USER root 
+ENTRYPOINT ["bin/bash","./start.sh"]
