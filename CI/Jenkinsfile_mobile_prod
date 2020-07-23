@@ -1,0 +1,122 @@
+pipeline {
+
+    agent any
+
+
+    parameters {
+        //string(defaultValue: "all", description: 'What is the target repository?', name: 'target_repo')
+         string(defaultValue: "master", description: 'What is the target branch?', name: 'target_branch')
+    }
+
+	environment{
+
+		target_repo = "pilot_dev_mobile"
+        prodRepository = 'pilot_prod_mobile'
+
+		dockerImage = ''
+		BUILD_NUMBER="${env.BUILD_NUMBER}"
+
+        // Prod Jenkins에서 Bitbucket 접속을 위한 CredentialsId
+        def CredentialsId = "xxxxxx"
+        // stg용 Bitbucket 접속정보
+        def StgGitBaseUrl = "http://bitbucket.pilot.com/scm/pilot/"
+        // prod용 Bitbucket 접속정보
+        def PrdGitBaseUrl = "http://bitbucket.pilot.com/scm/pilotp/"
+
+        def PrdecrUrl = "https://xxxxxx.dkr.ecr.ap-northeast-2.amazonaws.com"
+        def Prdecr = "xxxxxx.dkr.ecr.ap-northeast-2.amazonaws.com"
+        def PrdecrUser = "ecr:ap-northeast-2:jenkins2ecr-prod"
+
+	}
+
+    stages {
+
+ 		stage("STEP 1: CheckOut ") {
+            steps {
+ 	    
+					checkout([$class: 'GitSCM', branches: [
+						[name: "*/${target_branch}"]
+					], doGenerateSubmoduleConfigurations: false, extensions: [
+						[$class: 'RelativeTargetDirectory', relativeTargetDir: "../${target_repo}"]
+						,[$class: 'CleanCheckout'], [$class: 'CloneOption', timeout: 30, shallow: true]
+					], submoduleCfg: [], userRemoteConfigs: [
+						[credentialsId: "${CredentialsId}", url: "${StgGitBaseUrl}${target_repo}.git"]
+					]])
+            }
+        }
+
+ 		stage("STEP 2: Build ") {
+            steps {
+ 					dir("../${target_repo}") {
+						sh script: "chmod +x gradlew"
+						sh script: "./gradlew clean build -x test"
+					}
+            }
+        }
+
+      stage("STEP 3: CheckOut _docker ") {
+        steps{
+              
+					checkout([$class: 'GitSCM', branches: [
+						[name: "*/${target_branch}"]
+					], doGenerateSubmoduleConfigurations: false, extensions: [
+						[$class: 'RelativeTargetDirectory', relativeTargetDir: "../${prodRepository}_docker"]
+						,[$class: 'CleanCheckout'], [$class: 'CloneOption', timeout: 30, shallow: true]
+					], submoduleCfg: [], userRemoteConfigs: [
+						[credentialsId: "${CredentialsId}", url: "${PrdGitBaseUrl}${prodRepository}_docker.git"]
+					]])
+
+            }
+        }
+
+
+      stage("STEP 4: _docker git push -u origin develop  ") {
+        steps{
+
+	            dir("../${prodRepository}_docker") {
+                    sh 'git config --global --replace-all user.email "ryu.jiman@gmail.com" '
+                    sh 'git config --global --replace-all user.name "jmryu" '
+
+					// master push
+					sh script: "git checkout master"
+					sh script: "cp ../${target_repo}/build/libs/${target_repo}.jar ."
+					sh script: "git status"
+					sh script: "git add ."
+					sh script: "git commit -m '${prodRepository}_docker master build'"
+					sh script: "git push -u origin master"
+				}
+            }
+        }
+
+      stage("STEP 5: Build Container Image ") {
+        steps{
+            script {
+				
+                git branch: "master", url: "${PrdGitBaseUrl}${prodRepository}_docker.git", credentialsId: "admin"
+       			dockerImage = docker.build("${Prdecr}/${prodRepository}", "--build-arg APP_NAME=${prodRepository} .")
+           
+            }
+        }
+      }
+
+      stage('STEP 6: Push Image to Registry ') {
+        steps{
+          script {
+			  docker.withRegistry("${PrdecrUrl}", "${PrdecrUser}") {
+				dockerImage.push("${env.BUILD_NUMBER}")
+				dockerImage.push("latest")
+                sh "docker rmi ${Prdecr}/${prodRepository}:${BUILD_NUMBER}"
+				
+              }
+          }
+        }
+      }
+	}
+
+    post {
+		// always
+        always {
+			sh "rm -rf /var/jenkins_home/workspace/${prodRepository}*"
+        }
+    }
+}
