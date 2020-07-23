@@ -1,0 +1,121 @@
+pipeline {
+
+    agent any
+
+    parameters {
+        //string(defaultValue: "all", description: 'What is the target repository?', name: 'target_repo')
+        string(defaultValue: "develop", description: 'What is the target branch?', name: 'target_branch')
+    }
+
+	environment{
+
+		target_repo = "pilot_dev_mobile"
+
+		dockerImage = ''
+		BUILD_NUMBER="${env.BUILD_NUMBER}"
+
+		CredentialsId = "xxxxxx"
+		GitBaseUrl = "http://bitbucket.pilot.co.kr/scm/pilot/"
+		Dev_ecrUrl = "https://xxxx.dkr.ecr.ap-northeast-2.amazonaws.com"
+		Dev_ecr = "xxxx.dkr.ecr.ap-northeast-2.amazonaws.com"
+		Dev_ecrUser = "ecr:ap-northeast-2:jenkins2ecr-stg"
+
+	}
+
+    stages {
+
+ 		stage("STEP 1: CheckOut ") {
+            steps {
+
+					checkout([$class: 'GitSCM', branches: [
+						[name: "*/${target_branch}"]
+					], doGenerateSubmoduleConfigurations: false, extensions: [
+						[$class: 'RelativeTargetDirectory', relativeTargetDir: "../${target_repo}"]
+						,[$class: 'CleanCheckout'], [$class: 'CloneOption', timeout: 30, shallow: true]
+					], submoduleCfg: [], userRemoteConfigs: [
+						[credentialsId: "${CredentialsId}", url: "${GitBaseUrl}${target_repo}.git"]
+					]])
+            }
+        }
+
+ 		stage("STEP 2: Build ") {
+            steps {
+
+					dir("../${target_repo}") {
+
+						sh script: "chmod +x gradlew"
+						sh script: "./gradlew clean build -x test"
+					}
+            }
+        }
+
+
+      stage("STEP 3: CheckOut _docker ") {
+        steps{
+
+					checkout([$class: 'GitSCM', branches: [
+						[name: "*/${target_branch}"]
+					], doGenerateSubmoduleConfigurations: false, extensions: [
+						[$class: 'RelativeTargetDirectory', relativeTargetDir: "../${target_repo}_docker"]
+						,[$class: 'CleanCheckout'], [$class: 'CloneOption', timeout: 30, shallow: true]
+					], submoduleCfg: [], userRemoteConfigs: [
+						[credentialsId: "${CredentialsId}", url: "${GitBaseUrl}${target_repo}_docker.git"]
+					]])
+
+            }
+        }
+
+      stage("STEP 4: _docker git push -u origin develop  ") {
+        steps{
+
+					dir("../${target_repo}_docker") {
+						//sh 'git config --global credential.helper cache'
+						//sh 'git config --global push.default simple'
+
+					    sh 'git config --global --replace-all user.email "ryu.jiman@gmail.com" '
+						sh 'git config --global --replace-all user.name "jmryu" '
+
+						// develop push 
+						sh script: "git checkout develop"
+						//sh script: "git status"
+						sh script: "cp ../${target_repo}/build/libs/${target_repo}.jar ."
+						//sh script: "git status"
+						sh script: "git add ."
+						sh script: "git commit -m '${target_repo}_docker develop build'"
+						sh script: "git push -u origin develop"
+
+					}
+
+            }
+        }
+
+      stage("STEP 5: Build Container Image ") {
+        steps{
+            script {
+				
+			     git branch: "develop", url: "${GitBaseUrl}${target_repo}_docker.git", credentialsId: "admin"
+       			 dockerImage = docker.build("${Dev_ecr}/${target_repo}", "--build-arg APP_NAME=${target_repo} .")
+           
+            }
+        }
+      }
+
+      stage('STEP 6: Push Image to Registry ') {
+        steps{
+          script {
+			  docker.withRegistry("${Dev_ecrUrl}", "${Dev_ecrUser}") {
+				dockerImage.push("${env.BUILD_NUMBER}")
+				dockerImage.push("latest")
+				sh "docker rmi ${Dev_ecr}/${target_repo}:${BUILD_NUMBER}"
+              }
+          }
+        }
+      }
+	}
+    post {
+		// always
+        always {
+			sh "rm -rf /var/jenkins_home/workspace/${target_repo}*"
+        }
+    }
+}
