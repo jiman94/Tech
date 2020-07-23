@@ -1,0 +1,62 @@
+plugins {
+    id 'org.springframework.boot' version '2.1.6.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+    id 'java'
+}
+
+group = 'pilot.oss'
+sourceCompatibility = '1.8'
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    set('springCloudVersion', "Greenwich.SR2")
+}
+
+dependencies {
+
+    implementation "org.springframework.boot:spring-boot-starter-security"
+    
+    // basic
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    // thymeleaf
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:2.4.1'
+
+    // lombock
+    compileOnly 'org.projectlombok:lombok:1.18.8'
+    annotationProcessor 'org.projectlombok:lombok:1.18.8'
+
+    // config
+    implementation 'org.springframework.cloud:spring-cloud-starter-config'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    // session
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    compile 'org.springframework.session:spring-session-data-redis'
+    compile 'redis.clients:jedis:3.2.0'
+
+
+    // aop
+    compile 'org.springframework.boot:spring-boot-starter-aop'
+
+    // etc
+    compile 'org.apache.httpcomponents:httpclient:4.5.10'
+    compile 'com.google.code.gson:gson:2.8.5'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.9.0'
+    compile 'com.google.guava:guava:29.0-jre'
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
+bootRun {
+    systemProperties System.properties
+}
