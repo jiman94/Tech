@@ -6,9 +6,13 @@ https://github.com/rootsongjc/kubernetes-vagrant-centos-cluster
 
 
 
+
 ### FW - httpcompoent https 
 https://github.com/dhaval201279/RESTClientDemo
 
+
+## selenium-grid-with-debug-docker
+https://medium.com/@nitinbhardwaj6/selenium-grid-with-debug-docker-containers-23eceb6ab17f
 
 
 #### developer-roadmap 2020
