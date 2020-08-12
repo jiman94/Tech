@@ -34,7 +34,7 @@ Login Succeeded
 ```
 
 
-
+```java
 ➜  .docker docker images -a
 REPOSITORY                    TAG                 IMAGE ID            CREATED             SIZE
 sonatype/nexus3               latest              70b481d1fca4        43 hours ago        632MB
@@ -75,16 +75,18 @@ e0b3afb09dc3: Pushed
 cc967c529ced: Pushed 
 v20200810: digest: sha256:870610b017d23b8bc6f3667690a4925b4b3eebf6e63a33f78a5cb5ed846314b3 size: 5125
 ➜  .docker 
+```
 
-
+```java
 ➜  .docker docker pull localhost:12000/selenium/node-chrome:v20200810
 v20200810: Pulling from selenium/node-chrome
 Digest: sha256:870610b017d23b8bc6f3667690a4925b4b3eebf6e63a33f78a5cb5ed846314b3
 Status: Image is up to date for localhost:12000/selenium/node-chrome:v20200810
 localhost:12000/selenium/node-chrome:v20200810
 ➜  .docker 
+```
 
-
+```java
 ➜  .docker docker info
 Client:
  Debug Mode: false
@@ -142,6 +144,8 @@ Server:
  Product License: Community Engine
 
 ➜  .docker 
+```
+
 
 docker login -u admin -p admin http://localhost:12000
 
@@ -151,7 +155,7 @@ docker rm $( docker ps -f status=exited -q )
 
 
 OSX
-
+```java
 vi /Users/mz02-jmryu/.docker/config.json
 
 vi /Users/mz02-jmryu/.docker/daemon.json
@@ -161,5 +165,5 @@ vi /Users/mz02-jmryu/.docker/daemon.json
     "experimental" : true, 
     "insecure-registries": ["localhost:12000"]
 }
-
+```
 
