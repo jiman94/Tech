@@ -7,14 +7,16 @@ docker start nexus
 cat /Users/mz03-jmryu/Project/nexus-data/admin.password
 5e665afc-d472-42c8-bd73-d93fddc542e6% 
 
+```java
 daemon.json
 {
     "insecure-registries" : ["localhost:12000"]
 }
-
+```
 
 netstat -an | grep 12000 | grep LIS
 
+```java
 ➜  ~ docker login localhost:12000
 Username: admin
 Password: 
@@ -29,7 +31,7 @@ Login Succeeded
 ➜  .docker pwd
 /Users/mz03-jmryu/.docker
 ➜  .docker 
-
+```
 
 
 
