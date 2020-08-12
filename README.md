@@ -6,6 +6,10 @@ https://github.com/jiman94/PRJ_DevOps
 
 https://github.com/rootsongjc/kubernetes-vagrant-centos-cluster
 
+# workshop-k8s-basic
+https://github.com/subicura/workshop-k8s-basic
+https://github.com/sangkyunyoon/coe-kubernetes
+
 
 ### FW - httpcompoent https 
 https://github.com/dhaval201279/RESTClientDemo
