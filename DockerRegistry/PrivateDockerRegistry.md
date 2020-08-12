@@ -1,3 +1,5 @@
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
 mkdir -p /Users/mz03-jmryu/Project/nexus-data
 
 docker run --name nexus -d -p 12000:12000 -p 8081:8081 -v /Users/mz03-jmryu/Project/nexus-data:/nexus-data -u root sonatype/nexus3
