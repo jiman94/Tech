@@ -1,92 +1,149 @@
-
-1. docker container-id 확인 
-
-docker ps
-
-2. docker 컨테이너 들어가기 
-
-docker exec -uroot -it <<container-id>> /bin/bash
-
-3. 설치 
-./gralew
-
-4. 빌드 
-
-./gradlew clean build --stacktrace --debug
+1. docker install 
+https://docs.docker.com/desktop/
 
 
-gradle clean build --stacktrace --debug
+2. Pull the following docker images:
+
+$ docker pull selenium/hub
+$ docker pull selenium/node-chrome
+$ docker pull selenium/node-firefox
+
+3. 확인 
+$ docker images
 
 
+4. docker-compose 사용하는 방법 
 
+```yaml
+version: "3"
+services:
+  hub:
+    image: selenium/hub
+    ports:
+      - "4444:4444"
 
+    environment:
+      GRID_MAX_SESSION: 16
+      GRID_BROWSER_TIMEOUT: 3000
+      GRID_TIMEOUT: 3000
 
+  chrome:
+    image: selenium/node-chrome
+    container_name: web-automation_chrome
+    depends_on:
+      - hub
+    environment:
+      HUB_PORT_4444_TCP_ADDR: hub
+      HUB_PORT_4444_TCP_PORT: 4444
+      NODE_MAX_SESSION: 4
+      NODE_MAX_INSTANCES: 4
+    volumes:
+      - /dev/shm:/dev/shm
+    ports:
+      - "9001:5900"
+    links:
+      - hub
 
-0. 디렉토리이동 
+  firefox:
+    image: selenium/node-firefox
+    container_name: web-automation_firefox
+    depends_on:
+      - hub
+    environment:
+      HUB_PORT_4444_TCP_ADDR: hub
+      HUB_PORT_4444_TCP_PORT: 4444
+      NODE_MAX_SESSION: 2
+      NODE_MAX_INSTANCES: 2
+    volumes:
+      - /dev/shm:/dev/shm
+    ports:
+      - "9002:5900"
+    links:
+      - hub
+```
 
-cd doc
+$ docker-compose -f docker-compose.yml up -d
 
-1. 빌드 
-
-docker build -t selenium-jenkins .
-
-2. 실행 
-
-D:\app\jenkins\secrets
-
-
-docker run -d -p 80:8080 -p 50001:50000 -v /Users/mz03-jmryu/Downloads/jenkins:/var/jenkins_home --restart unless-stopped --name selenium selenium
-
-
-
-
-docker run -d -p 8088:8080 -p 50001:50000 -v /Users/mz03-jmryu/Downloads/jenkins:/var/jenkins_home --restart unless-stopped --name selenium selenium
-
-
-docker run -d -p 8088:8080 -p 50001:50000 -v D:/app/jenkins:/var/jenkins_home --restart unless-stopped --name selenium-jenkins selenium-jenkins
-
-docker run -d --env JAVA_OPTS="-Dorg.jenkinsci.plugins.gitclient.Git.timeOut=20" 8088:8080 -p 50001:50000 -v D:/app/jenkins:/var/jenkins_home --restart unless-stopped --name selenium-jenkins selenium-jenkins
-
-
-
-docker run -d --env JAVA_OPTS="-Dorg.jenkinsci.plugins.gitclient.Git.timeOut=20" -p 8088:8080 -p 50001:50000 -v /Users/mz03-jmryu/Downloads/jenkins:/var/jenkins_home -v /var/run/docker.sock:/var/run/docker.sock -v /etc/localtime:/etc/localtime:ro -e TZ=Asia/Seoul --restart unless-stopped  --name selenium-jenkins selenium-jenkins
-
-
-
-
-https://github.com/eliranshani/selenium-docker-allure
-
-
-https://bonigarcia.github.io/selenium-jupiter/
-
-https://chromedriver.chromium.org/downloads
-
-https://github.com/bonigarcia/selenium-jupiter
-
-
-
-# Install Selenium GRID
-
-selenium HQ: http://www.seleniumhq.org/download/
-
-Step 2: Open the command prompt and navigate to a folder where the server is located. Run the server by using below command
-
-java -jar selenium-server-standalone-3.141.59.jar -role hub
+$ docker ps
 
 http://localhost:4444/grid/console
 
-Step 3: Go to the other machine where you intend to setup Nodes. Open the command prompt and run the below line.
+3. Configuring Testng.xml file.
+```xml 
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite thread-count="2" name="SeleniumGridDocker" parallel="tests">
+
+	<test name="Chrome Test">
+		<parameter name="browser" value="chrome" />
+		<parameter name="Port" value="9001" />
+		<classes>
+			<class name="com.chicor.SeleniumGrid" />
+		</classes>
+	</test>
+
+	<test name="Firefox Test">
+		<parameter name="browser" value="firefox" />
+		<parameter name="Port" value="9002" />
+		<classes>
+			<class name="com.chicor.SeleniumGrid" />
+		</classes>
+	</test>
+
+</suite>
+```
+
+```java
+@Parameters({"Port"})
+@BeforeClass
+public void initiateDriver(String Port) throws MalformedURLException {
+            if(Port.equalsIgnoreCase("9001"))
+    {
+        driver = new RemoteWebDriver(new URL("http:localhost:4444/wd/hub"), DesiredCapabilities.chrome());
+        driver.manage().window().maximize();
+    }
+    else if(Port.equalsIgnoreCase("9002")){
+        driver = new RemoteWebDriver(new URL("http:localhost:4444/wd/hub"), DesiredCapabilities.firefox());
+        driver.manage().window().maximize();
+    }
+}
+```
 
 
-/Users/mz03-jmryu/Downloads
-
-java -jar selenium-server-standalone-3.141.59.jar  -role node -hub http://localhost:4444/grid/register -port 5556
-
-
-java -jar selenium-server-standalone-3.141.59.jar -role webdriver -hub http://localhost:4444/grid/register -port 5556 -browser browserName=chrome
-
-java -jar selenium-server-standalone-3.141.59.jar  -role webdriver -hub http://localhost:4444/grid/register -port 5556 -browser browserName=iexplore
--browser browserName=firefox -browser browserName=chrome
+4. Time to run tests!!
+$ mvn clean test -Dsurefire.suiteXmlFiles=Testng.xml
 
 
-http://localhost:5556/wd/hub/static/resource/hub.html
+
+5. 
+
+https://www.realvnc.com/en/connect/download/viewer/
+
+secret
+
+
+
+6. Tear Down the infrastructure.
+$ docker-compose -f docker-compose.yml down
+$ docker ps
+
+```xml 
+<dependency>
+    <groupId>io.github.bonigarcia</groupId>
+    <artifactId>selenium-jupiter</artifactId>
+    <version>3.3.4</version>
+    <scope>test</scope>
+</dependency>
+```
+
+# or in Gradle project:
+
+```java
+dependencies {
+    testCompile("io.github.bonigarcia:selenium-jupiter:3.3.4")
+}
+```
+
+
+#  참조 
+https://www.softwaretestinghelp.com/docker-selenium-tutorial/
+
