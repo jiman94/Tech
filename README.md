@@ -11,6 +11,13 @@ git clone https://github.com/ddd-by-examples/event-source-cqrs-sample.git
 git clone https://github.com/ddd-by-examples/all-things-cqrs.git
 
 
+스프링캠프 2017 [Day2 A3] : Implementing EventSourcing & CQRS (구현부)
+https://www.youtube.com/watch?v=12EGxMB8SR8
+
+스프링캠프 2017 [Day2 A2] : 이벤트 소싱 소개 (이론부)
+https://www.youtube.com/watch?v=TDhknOIYvw4
+
+
 ### K8S good 
 https://github.com/sysnet4admin/IaC
 
