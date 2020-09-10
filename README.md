@@ -1,3 +1,7 @@
+#  redis cluster
+https://github.com/Grokzen/docker-redis-cluster
+
+
 # kafka docker
 
 https://github.com/gschmutz/stream-processing-workshop
