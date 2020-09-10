@@ -1,8 +1,12 @@
 # kafka docker
 
 https://github.com/gschmutz/stream-processing-workshop
+
 https://github.com/gschmutz/kafka-workshop
+
 https://github.com/gschmutz/kafka-as-your-datalake
+
+https://github.com/gschmutz/event-driven-microservices-demo
 
 # redis tools
 https://tableplus.com/
