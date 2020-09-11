@@ -1,3 +1,11 @@
+# 이벤트 기반 비동기주문 
+RxJava 1.1.6
+Apache Kafka 0.10.1.0
+
+https://github.com/DomainDriven/AsyncOrder
+
+https://github.com/YooYoungmo/article-tcc
+
 #  redis cluster
 https://github.com/Grokzen/docker-redis-cluster
 
