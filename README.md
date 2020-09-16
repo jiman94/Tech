@@ -1,5 +1,7 @@
 # kafka cluster
 
+https://github.com/simplesteph/kafka-stack-docker-compose
+
 https://github.com/gschmutz/various-demos/tree/master/bidirectional-integration-oracle-kafka
 
 https://github.com/gschmutz/various-demos
