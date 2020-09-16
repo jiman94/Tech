@@ -2,6 +2,7 @@
 
 https://github.com/gschmutz/various-demos/tree/master/bidirectional-integration-oracle-kafka
 https://github.com/gschmutz/various-demos
+https://github.com/gschmutz/event-driven-microservices-demo.git
 
 
 # docker-ci-tool-stack
