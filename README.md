@@ -1,3 +1,9 @@
+# kafka cluster
+
+https://github.com/gschmutz/various-demos/tree/master/bidirectional-integration-oracle-kafka
+https://github.com/gschmutz/various-demos
+
+
 # docker-ci-tool-stack
 https://github.com/marcelbirkner/docker-ci-tool-stack
 
