@@ -1,3 +1,9 @@
+# docker-ci-tool-stack
+https://github.com/marcelbirkner/docker-ci-tool-stack
+
+https://github.com/mgcrea/docker-compose-gitlab-ce
+
+
 # Redis CQRS
 https://github.com/eventuate-tram/eventuate-tram-examples-customers-and-orders-redis
 
@@ -6,6 +12,8 @@ https://github.com/vaquarkhan/spring-batch-PCF
 https://github.com/vaquarkhan/apache-kafka-spark-streaming-poc
 
 https://github.com/vaquarkhan/microservice-poc
+
+https://www.youtube.com/watch?v=Yd7TXUdcaUQ
 
 # 이벤트 기반 비동기주문 
 RxJava 1.1.6
