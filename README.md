@@ -1,3 +1,9 @@
+# Confluent 
+https://github.com/confluentinc
+
+https://github.com/confluentinc/demo-scene/tree/master/scalable-payment-processing/src/main/java/io/confluent/kpay
+
+
 # kafka cluster
 
 https://github.com/simplesteph/kafka-stack-docker-compose
