@@ -3,6 +3,8 @@ https://www.youtube.com/watch?v=-pKr6Zg-MtA
 
 https://github.com/vahidhedayati/micronaut-vuejs-cqrs
 
+https://github.com/jiman94/grails-vue-springsecurity-demo
+
 # Confluent 
 https://github.com/confluentinc
 
