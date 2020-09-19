@@ -1,3 +1,8 @@
+# CRRS Vuejs 
+https://www.youtube.com/watch?v=-pKr6Zg-MtA
+
+https://github.com/vahidhedayati/micronaut-vuejs-cqrs
+
 # Confluent 
 https://github.com/confluentinc
 
