@@ -11,6 +11,7 @@ https://github.com/event-storming/gateway.git
 
 https://github.com/event-storming/container-orchestration.git
 
+https://github.com/event-storming
 
 # Confluent 
 https://github.com/confluentinc
