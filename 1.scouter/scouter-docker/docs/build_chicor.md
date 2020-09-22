@@ -40,7 +40,11 @@ cd ${SCOUTER_HOME}/scouter-host-agent
 **2.Test**
 ```
 
-docker run -it --name scouter-server -p 6100:6100/tcp -p 6101:6101/udp chicor/scouter-server
+
+docker run -it --name scouter-server -p 6100:6100/tcp -p 6101:6101/udp chicor/scouter-server 
+
+
+docker run -d -it --name scouter-server -p 6100:6100/tcp -p 6101:6101/udp chicor/scouter-server 
 
 
  / ___|  ___ ___  _   _| |_ ___ _ __ 
@@ -98,5 +102,36 @@ cd ${SCOUTER_HOME}/scouter-tomcat-openshift-s2i
 ```
 docker run -it ljhiyh/webserver30-tomcat7-openshift
 ```
+
+sudo yum update -y
+
+sudo yum install docker -y
+
+docker --version
+Docker version 18.09.9-ce, build 039a7df
+
+sudo docker info
+Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?
+
+
+chmod 777 /var/run/docker.sock
+
+sudo service docker start
+
+sudo docker info
+
+sudo usermod -a -G docker ec2-user
+
+
+sudo systemctl enable docker
+
+sudo service docker stop
+
+sudo service docker start
+
+sudo yum install git
+
+
+cat /etc/*release
 
 
