@@ -228,27 +228,75 @@ kubectl get all
 kubectl get svc,deployment,pods -o wide
 
 
-[vagrant@m-k8s istio-1.6.6]$ kubectl get svc,deployment,pods -o wide
-NAME                  TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE    SELECTOR
-service/details       ClusterIP   10.103.169.188   <none>        9080/TCP   90m    app=details
-service/kubernetes    ClusterIP   10.96.0.1        <none>        443/TCP    3h9m   <none>
-service/productpage   ClusterIP   10.97.94.255     <none>        9080/TCP   90m    app=productpage
-service/ratings       ClusterIP   10.103.201.169   <none>        9080/TCP   90m    app=ratings
-service/reviews       ClusterIP   10.97.247.34     <none>        9080/TCP   90m    app=reviews
 
-NAME                             READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS    IMAGES                                                    SELECTOR
-deployment.apps/details-v1       1/1     1            1           90m   details       docker.io/istio/examples-bookinfo-details-v1:1.16.2       app=details,version=v1
-deployment.apps/productpage-v1   1/1     1            1           90m   productpage   docker.io/istio/examples-bookinfo-productpage-v1:1.16.2   app=productpage,version=v1
-deployment.apps/ratings-v1       1/1     1            1           90m   ratings       docker.io/istio/examples-bookinfo-ratings-v1:1.16.2       app=ratings,version=v1
-deployment.apps/reviews-v1       1/1     1            1           90m   reviews       docker.io/istio/examples-bookinfo-reviews-v1:1.16.2       app=reviews,version=v1
-deployment.apps/reviews-v2       1/1     1            1           90m   reviews       docker.io/istio/examples-bookinfo-reviews-v2:1.16.2       app=reviews,version=v2
-deployment.apps/reviews-v3       1/1     1            1           90m   reviews       docker.io/istio/examples-bookinfo-reviews-v3:1.16.2       app=reviews,version=v3
 
-NAME                                  READY   STATUS    RESTARTS   AGE   IP               NODE     NOMINATED NODE   READINESS GATES
-pod/details-v1-558b8b4b76-f9krh       1/1     Running   0          71m   172.16.103.135   w2-k8s   <none>           <none>
-pod/productpage-v1-6987489c74-xrwfd   1/1     Running   0          71m   172.16.103.137   w2-k8s   <none>           <none>
-pod/ratings-v1-7dc98c7588-64s69       1/1     Running   0          71m   172.16.221.131   w1-k8s   <none>           <none>
-pod/reviews-v1-7f99cc4496-jdkx7       1/1     Running   0          71m   172.16.103.136   w2-k8s   <none>           <none>
-pod/reviews-v2-7d79d5bd5d-qndpm       1/1     Running   0          71m   172.16.132.6     w3-k8s   <none>           <none>
-pod/reviews-v3-7dbcdcbc56-654hr       1/1     Running   0          71m   172.16.221.132   w1-k8s   <none>           <none>
-[vagrant@m-k8s istio-1.6.6]$ 
+kubectl apply -f ./samples/addons/kiali.yaml
+https://kiali.io/documentation/latest/quick-start/#_install_via_istio_addons
+
+
+https://istio.io/latest/docs/ops/integrations/kiali/
+
+
+[vagrant@m-k8s istio-1.7.2]$ kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.7/samples/addons/grafana.yaml
+serviceaccount/grafana created
+configmap/grafana created
+service/grafana created
+deployment.apps/grafana created
+configmap/istio-grafana-dashboards created
+configmap/istio-services-grafana-dashboards created
+[vagrant@m-k8s istio-1.7.2]$ 
+[vagrant@m-k8s istio-1.7.2]$ 
+[vagrant@m-k8s istio-1.7.2]$ kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.7/samples/addons/jaeger.yaml
+deployment.apps/jaeger created
+service/tracing created
+service/zipkin created
+[vagrant@m-k8s istio-1.7.2]$ kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.7/samples/addons/prometheus.yaml
+serviceaccount/prometheus created
+configmap/prometheus created
+clusterrole.rbac.authorization.k8s.io/prometheus created
+clusterrolebinding.rbac.authorization.k8s.io/prometheus created
+service/prometheus created
+deployment.apps/prometheus created
+[vagrant@m-k8s istio-1.7.2]$ kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.7/samples/addons/extras/zipkin.yaml
+deployment.apps/zipkin created
+service/tracing configured
+service/zipkin configured
+[vagrant@m-k8s istio-1.7.2]$ 
+
+
+
+[vagrant@m-k8s istio-1.7.2]$ kubectl get pod -n istio-system
+NAME                                    READY   STATUS    RESTARTS   AGE
+grafana-75b5cddb4d-ts5h6                1/1     Running   0          5m34s
+istio-egressgateway-fbb7dc4f4-8pbkx     1/1     Running   1          4h37m
+istio-ingressgateway-5f84fcdd69-2j4ck   1/1     Running   1          4h37m
+istiod-77df9b78f8-tsbsk                 1/1     Running   1          4h38m
+jaeger-5795c4cf99-78nkg                 1/1     Running   0          5m20s
+kiali-6c49c7d566-mxzbm                  1/1     Running   0          24m
+prometheus-9d5676d95-m82f2              2/2     Running   0          5m3s
+zipkin-556c4d54f5-nvmwp                 1/1     Running   0          4m44s
+[vagrant@m-k8s istio-1.7.2]$ 
+
+
+kubectl logs -f istio-ingressgateway-5f84fcdd69-2j4ck -n istio-system
+
+
+
+
+[vagrant@m-k8s istio-1.7.2]$ istioctl proxy-status
+NAME                                                   CDS        LDS        EDS        RDS          ISTIOD                      VERSION
+details-v1-558b8b4b76-bfclf.default                    SYNCED     SYNCED     SYNCED     SYNCED       istiod-77df9b78f8-tsbsk     1.7.2
+istio-egressgateway-fbb7dc4f4-8pbkx.istio-system       SYNCED     SYNCED     SYNCED     NOT SENT     istiod-77df9b78f8-tsbsk     1.7.2
+istio-ingressgateway-5f84fcdd69-2j4ck.istio-system     SYNCED     SYNCED     SYNCED     SYNCED       istiod-77df9b78f8-tsbsk     1.7.2
+productpage-v1-6987489c74-lt47h.default                SYNCED     SYNCED     SYNCED     SYNCED       istiod-77df9b78f8-tsbsk     1.7.2
+ratings-v1-7dc98c7588-kz7zz.default                    SYNCED     SYNCED     SYNCED     SYNCED       istiod-77df9b78f8-tsbsk     1.7.2
+reviews-v1-7f99cc4496-z8k5m.default                    SYNCED     SYNCED     SYNCED     SYNCED       istiod-77df9b78f8-tsbsk     1.7.2
+reviews-v2-7d79d5bd5d-dp98z.default                    SYNCED     SYNCED     SYNCED     SYNCED       istiod-77df9b78f8-tsbsk     1.7.2
+reviews-v3-7dbcdcbc56-5q5g6.default                    SYNCED     SYNCED     SYNCED     SYNCED       istiod-77df9b78f8-tsbsk     1.7.2
+[vagrant@m-k8s istio-1.7.2]$ istioctl analyze --all-namespaces
+Warn [IST0102] (Namespace kiali-operator) The namespace is not enabled for Istio injection. Run 'kubectl label namespace kiali-operator istio-injection=enabled' to enable it, or 'kubectl label namespace kiali-operator istio-injection=disabled' to explicitly mark it as not needing injection
+Warn [IST0102] (Namespace kube-node-lease) The namespace is not enabled for Istio injection. Run 'kubectl label namespace kube-node-lease istio-injection=enabled' to enable it, or 'kubectl label namespace kube-node-lease istio-injection=disabled' to explicitly mark it as not needing injection
+Info [IST0118] (Service grafana.istio-system) Port name service (port: 3000, targetPort: 3000) doesn't follow the naming convention of Istio port.
+Error: Analyzers found issues when analyzing all namespaces.
+See https://istio.io/docs/reference/config/analysis for more information about causes and resolutions.
+[vagrant@m-k8s istio-1.7.2]$ 
