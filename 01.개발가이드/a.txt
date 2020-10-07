@@ -1,0 +1,58 @@
+가. 검색엔진 
+
+    1. 검색엔진 운영 서버 
+
+    cd /app/engine/sf1/batch ./isc.sh ../config/config.xml start
+
+    cd /app/engine/sf1/batch ./manager.sh start
+
+    cd /app/engine/sf1/batch ./cmanager.sh ../config/cmanager.xml start
+
+    /app/engine/sf1/simpleserver/classes/lib/wncacheserver-1.1.3.jar com.wisenut.server.Server
+
+    2.검색API 운영 서버
+
+    chichor.com -> search.jsp -> 검색엔진
+
+    app/engine/apache-tomcat-9.0.33/webapps/ROOT/chicor_search/search.jsp
+
+    3. 검색엔진 관리자 화면 운영 서버  
+
+    /app/engine/sf1/manager:/app/engine/sf1/manager/start.jar JettyLauncher --start
+
+    -Dlauncher_home=/app/engine/sf1 -Djetty.home=/app/engine/sf1/manager -Djetty.base=/app/engine/sf1/manager -Djava.io.tmpdir=/app/engine/sf1/manager/temp -Duser.timezone=GMT+09:00
+
+나. MSA ( Istio )
+
+1. Istio Data API ( 회원 )
+
+k8s_istio-proxy_api-member-deployment2-6786b499f5-8xz8p_chicor-service_dcdd53bb-020e-11eb-a5d8-025311e5c256_0
+k8s_chicor-api-member2_api-member-deployment2-6786b499f5-8xz8p_chicor-service_dcdd53bb-020e-11eb-a5d8-025311e5c256_0
+k8s_POD_api-member-deployment2-6786b499f5-8xz8p_chicor-service_dcdd53bb-020e-11eb-a5d8-025311e5c256_0
+
+2. Istio Control ( 모니터링 )
+
+k8s_metrics-server_metrics-server-64c67868bd-h86n9_kube-system_9adacf31-ab19-11ea-806d-0afcb9d3f846_0
+k8s_sidecar-injector-webhook_istio-sidecar-injector-6f7c94c9dc-rf6s8_istio-system_0e83a132-8862-11ea-93da-02cb91a5d9c6_0
+k8s_POD_istio-sidecar-injector-6f7c94c9dc-rf6s8_istio-system_0e83a132-8862-11ea-93da-02cb91a5d9c6_0
+k8s_citadel_istio-citadel-8557b8c758-95nss_istio-system_0e6cefae-8862-11ea-93da-02cb91a5d9c6_0
+k8s_jaeger_istio-tracing-7bdc6f8867-28z64_istio-system_0e92ea1b-8862-11ea-93da-02cb91a5d9c6_0
+k8s_POD_istio-tracing-7bdc6f8867-28z64_istio-system_0e92ea1b-8862-11ea-93da-02cb91a5d9c6_0
+k8s_POD_istio-citadel-8557b8c758-95nss_istio-system_0e6cefae-8862-11ea-93da-02cb91a5d9c6_0
+k8s_coredns_coredns-685bd65d99-q72s5_kube-system_7b6f4bf2-48ac-11ea-acb6-0a5a68bd9302_0
+k8s_POD_coredns-685bd65d99-q72s5_kube-system_7b6f4bf2-48ac-11ea-acb6-0a5a68bd9302_0
+
+3. Istio front 
+
+k8s_aws-node_aws-node-nnqlt_kube-system_161ef7ad-48ab-11ea-acb6-0a5a68bd9302_0
+k8s_kube-proxy_kube-proxy-fgmdn_kube-system_161e6e5b-48ab-11ea-acb6-0a5a68bd9302_0
+k8s_POD_aws-node-nnqlt_kube-system_161ef7ad-48ab-11ea-acb6-0a5a68bd9302_0
+k8s_POD_kube-proxy-fgmdn_kube-system_161e6e5b-48ab-11ea-acb6-0a5a68bd9302_0
+
+4. Istio Ingress ( L7 )
+
+k8s_istio-proxy_istio-pilot-6d44f9cdd7-bptgl_istio-system_0e4baf0f-8862-11ea-93da-02cb91a5d9c6_2
+k8s_discovery_istio-pilot-6d44f9cdd7-bptgl_istio-system_0e4baf0f-8862-11ea-93da-02cb91a5d9c6_0
+k8s_POD_istio-pilot-6d44f9cdd7-bptgl_istio-system_0e4baf0f-8862-11ea-93da-02cb91a5d9c6_0
+k8s_tiller_tiller-deploy-586965d498-n2t2z_kube-system_1f94c56a-4c95-11ea-acb6-0a5a68bd9302_0
+k8s_POD_tiller-deploy-586965d498-n2t2z_kube-system_1f94c56a-4c95-11ea-acb6-0a5a68bd9302_0
