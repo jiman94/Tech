@@ -52,19 +52,16 @@ sudo find / -name helm
  
 kubectl -n kube-system delete deployment tiller-deploy
 kubectl -n kube-system delete service/tiller-deploy
- 
-이제, helm3를 설치해보도록 하겠습니다.
-
-맥의 경우
-
-brew install helm
- 
-일반 리눅스의 경우 
 
 curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 > get_helm.sh
 chmod 700 get_helm.sh
 ./get_helm.sh
- 
+cp /usr/local/bin/helm /bin/
+
+helm version
+
+Helm v3.3.4 is already latest
+
 
 정상적으로 설치되었다면, 기본적인 차트를 받아서 사용할 수 있도록 아래 명령어를 실행해주세요
 
