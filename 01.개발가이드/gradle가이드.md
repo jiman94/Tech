@@ -1,3 +1,10 @@
+
+#### upgrading
+
+gradle wrapper --gradle-version 6.6.1
+
+https://docs.gradle.org/current/userguide/upgrading_version_5.html
+
 #### settings.gradle
 
 rootProject.name = 'pilot'
