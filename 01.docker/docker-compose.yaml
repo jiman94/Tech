@@ -1,0 +1,26 @@
+version: '3'
+
+services: 
+  backend-node:
+    image: emoket/backend-node:1.0.0
+  backend-spring:
+    image: emoket/backend-spring:1.0.0
+  bff:
+    image: emoket/bff:1.0.0
+    environment:
+      target.backend.spring.name: backend-spring:8082
+      target.backend.node.name: backend-node:8083
+    links:
+      - backend-spring
+      - backend-node
+    depends_on:
+      - backend-spring
+      - backend-node
+  frontend-vue:
+    image: emoket/frontend-vue:1.0.0
+    ports:
+      - "8080:8080"
+    links:
+      - bff
+    depends_on:
+      - bff
